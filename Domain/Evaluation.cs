@@ -9,5 +9,8 @@ namespace Domain
     class Evaluation
     {
         public int Id { get; set; }
+        public EvaluationValue Value { get; set; }
+        public User EvaluatedBy { get; set; }
+        public DateTime EvaluationTime { get; set; }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    class CommentEvaluation
+    class PostEvaluation
     {
-        public int CommentId { get; set; }
+        public int PostId { get; set; }
         public int EvaluationId { get; set; }
     }
 }

@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comment.cs" />
-    <Compile Include="CommentEvaluation.cs" />
+    <Compile Include="Post.cs" />
+    <Compile Include="PostEvaluation.cs" />
     <Compile Include="Evaluation.cs" />
     <Compile Include="EvaluationValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

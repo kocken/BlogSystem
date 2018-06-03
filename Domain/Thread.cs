@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    class Thread
+    class Thread : Post
     {
-        public int Id { get; set; }
+        public string Title { get; set; }
     }
 }
