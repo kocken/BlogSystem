@@ -8,5 +8,6 @@ namespace Domain
 {
     class EvaluationValue
     {
+        public int Id { get; set; }
     }
 }

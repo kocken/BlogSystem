@@ -8,5 +8,7 @@ namespace Domain
 {
     class CommentEvaluation
     {
+        public int CommentId { get; set; }
+        public int EvaluationId { get; set; }
     }
 }

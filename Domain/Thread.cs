@@ -8,5 +8,6 @@ namespace Domain
 {
     class Thread
     {
+        public int Id { get; set; }
     }
 }
