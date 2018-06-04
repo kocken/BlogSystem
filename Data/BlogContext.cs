@@ -22,8 +22,7 @@ namespace Data
             modelBuilder.Entity<Thread>().ToTable("Thread");
             modelBuilder.Entity<Post>().ToTable("Post");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
-            modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation");
-            modelBuilder.Entity<PostEvaluation>().HasKey(m => new { m.PostID, m.EvaluationID });
+            modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation").HasKey(m => new { m.PostID, m.EvaluationID });
         }
     }
 }
