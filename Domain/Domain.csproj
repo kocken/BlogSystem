@@ -108,9 +108,7 @@
     <Compile Include="Post.cs" />
     <Compile Include="PostEvaluation.cs" />
     <Compile Include="Evaluation.cs" />
-    <Compile Include="EvaluationValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rank.cs" />
     <Compile Include="Thread.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
