@@ -10,10 +10,10 @@ namespace Domain
     {
         public Thread()
         {
-            Posts = new List<Post>();
+            Comments = new List<Post>();
         }
 
         public string Title { get; set; }
-        public List<Post> Posts { get; set; }
+        public List<Post> Comments { get; set; }
     }
 }
