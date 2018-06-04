@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    class Thread : Post
+    public class Thread : Post
     {
         public Thread()
         {

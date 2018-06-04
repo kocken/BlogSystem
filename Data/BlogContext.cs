@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace Data
 {
     class BlogContext : DbContext
     {
+        public DbSet<Post> Courses { get; set; }
     }
 }

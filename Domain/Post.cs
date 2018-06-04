@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    class Post
+    public class Post
     {
         public int Id { get; set; }
         public User Author { get; set; }
