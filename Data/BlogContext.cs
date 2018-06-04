@@ -10,6 +10,9 @@ namespace Data
 {
     class BlogContext : DbContext
     {
-        public DbSet<Post> Courses { get; set; }
+        public DbSet<Thread> Threads { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<PostEvaluation> PostEvaluations { get; set; }
     }
 }
