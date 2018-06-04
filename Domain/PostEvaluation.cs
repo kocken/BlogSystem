@@ -8,7 +8,7 @@ namespace Domain
 {
     public class PostEvaluation
     {
-        public int PostId { get; set; }
-        public int EvaluationId { get; set; }
+        public int PostID { get; set; }
+        public int EvaluationID { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace Domain
 {
     public enum Rank
     {
-        Member, Mod, Admin
+            Member, Mod, Admin
     }
 
     public class User
@@ -20,7 +20,7 @@ namespace Domain
             Evaluations = new List<Evaluation>();
         }
 
-        public int Id { get; set; }
+        public int ID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
         public Rank? Rank { get; set; }

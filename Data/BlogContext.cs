@@ -23,7 +23,7 @@ namespace Data
             modelBuilder.Entity<Post>().ToTable("Post");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
             modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation");
-            modelBuilder.Entity<PostEvaluation>().HasKey(m => new { m.PostId, m.EvaluationId });
+            modelBuilder.Entity<PostEvaluation>().HasKey(m => new { m.PostID, m.EvaluationID });
         }
     }
 }
