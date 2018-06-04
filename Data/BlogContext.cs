@@ -15,5 +15,15 @@ namespace Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
         public DbSet<PostEvaluation> PostEvaluations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Thread>().ToTable("Thread");
+            modelBuilder.Entity<Post>().ToTable("Post");
+            modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
+            modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation");
+            modelBuilder.Entity<PostEvaluation>().HasKey(m => new { m.PostId, m.EvaluationId });
+        }
     }
 }
