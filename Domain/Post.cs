@@ -8,7 +8,7 @@ namespace Domain
         [Required]
         public int Id { get; set; }
         [Required]
-        public User Author { get; set; }
+        public User User { get; set; }
         [Required, StringLength(2000, MinimumLength = 1)]
         public string Message { get; set; }
         [Required]

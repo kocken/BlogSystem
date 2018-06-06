@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20180606215834_TableUpdateTest.Designer.cs" />
     <Compile Remove="Migrations\20180606215949_TableUpdateTest.cs" />
     <Compile Remove="Migrations\20180606215949_TableUpdateTest.Designer.cs" />
+    <Compile Remove="Migrations\20180606224821_Test.cs" />
+    <Compile Remove="Migrations\20180606224821_Test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
