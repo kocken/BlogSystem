@@ -38,7 +38,8 @@ namespace Data
         {
             optionsBuilder
                 .EnableSensitiveDataLogging()
-                .UseLoggerFactory(MyLoggerFactory);
+                .UseLoggerFactory(MyLoggerFactory)
+                .UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = MKBlogDb; Trusted_Connection = True;");
         }
     }
 }
