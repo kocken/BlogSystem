@@ -2,11 +2,6 @@
 
 namespace Domain
 {
-    public enum Rank
-    {
-        Member, Moderator, Administrator
-    }
-
     public class User
     {
         public int Id { get; set; }
