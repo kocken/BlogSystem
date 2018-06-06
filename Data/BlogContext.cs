@@ -23,10 +23,5 @@ namespace Data
             modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation").HasKey(m => new { m.PostId, m.EvaluationId });
         }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = MKBlog; Trusted_Connection = True;");
-        }*/
-
     }
 }

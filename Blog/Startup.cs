@@ -31,7 +31,7 @@ namespace Blog
             services.AddDbContext<BlogContext>(options => options
                 .EnableSensitiveDataLogging()
                 .UseLoggerFactory(logger)
-                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blog")));
 
             services.AddMvc();
         }
