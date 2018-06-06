@@ -24,7 +24,7 @@ namespace Domain
         public int ID { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
-        public Rank? Rank { get; set; }
+        public Rank Rank { get; set; }
         public DateTime JoinTime { get; set; }
         public List<Thread> Threads { get; set; }
         public List<Post> Comments { get; set; }

@@ -8,7 +8,7 @@ namespace Domain
 {
     public enum Value
     {
-        Unevaluated, Approved, Disapproved
+        Approved, Disapproved
     }
 
     public class Evaluation
