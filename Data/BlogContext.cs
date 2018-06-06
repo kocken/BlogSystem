@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Data
 {
@@ -16,6 +17,11 @@ namespace Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<User>().ToTable("User");
             modelBuilder.Entity<Thread>().ToTable("Thread");
             modelBuilder.Entity<Post>().ToTable("Post");

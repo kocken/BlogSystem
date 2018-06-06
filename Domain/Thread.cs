@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
@@ -9,6 +10,7 @@ namespace Domain
             Comments = new List<Post>();
         }
 
+        [Required, MaxLength(20)]
         public string Title { get; set; }
         public List<Post> Comments { get; set; }
     }

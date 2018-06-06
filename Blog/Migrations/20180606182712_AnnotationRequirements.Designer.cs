@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20180606182712_AnnotationRequirements")]
+    partial class AnnotationRequirements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,15 +27,15 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("EvaluatedById");
+                    b.Property<int?>("EvaluatedById");
 
-                    b.Property<int>("EvaluatedOnId");
+                    b.Property<int?>("EvaluatedOnId");
 
                     b.Property<DateTime>("EvaluationTime");
 
-                    b.Property<int>("EvaluationValueId");
+                    b.Property<int?>("PostId");
 
-                    b.Property<int>("PostId");
+                    b.Property<int?>("ValueId");
 
                     b.HasKey("Id");
 
@@ -41,9 +43,9 @@ namespace Blog.Migrations
 
                     b.HasIndex("EvaluatedOnId");
 
-                    b.HasIndex("EvaluationValueId");
-
                     b.HasIndex("PostId");
+
+                    b.HasIndex("ValueId");
 
                     b.ToTable("Evaluation");
                 });
@@ -69,7 +71,7 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorId");
+                    b.Property<int?>("AuthorId");
 
                     b.Property<DateTime>("CreationTime");
 
@@ -133,7 +135,7 @@ namespace Blog.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
-                    b.Property<int>("RankId");
+                    b.Property<int?>("RankId");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -163,36 +165,30 @@ namespace Blog.Migrations
                 {
                     b.HasOne("Domain.User", "EvaluatedBy")
                         .WithMany()
-                        .HasForeignKey("EvaluatedById")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("EvaluatedById");
 
                     b.HasOne("Domain.User", "EvaluatedOn")
                         .WithMany()
-                        .HasForeignKey("EvaluatedOnId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.EvaluationValue", "EvaluationValue")
-                        .WithMany()
-                        .HasForeignKey("EvaluationValueId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("EvaluatedOnId");
 
                     b.HasOne("Domain.Post", "Post")
                         .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("Domain.EvaluationValue", "Value")
+                        .WithMany()
+                        .HasForeignKey("ValueId");
                 });
 
             modelBuilder.Entity("Domain.Post", b =>
                 {
                     b.HasOne("Domain.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("Domain.Thread")
                         .WithMany("Comments")
-                        .HasForeignKey("ThreadId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ThreadId");
                 });
 
             modelBuilder.Entity("Domain.PostEvaluation", b =>
@@ -200,20 +196,19 @@ namespace Blog.Migrations
                     b.HasOne("Domain.Evaluation", "Evaluation")
                         .WithMany()
                         .HasForeignKey("EvaluationId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Post", "Post")
                         .WithMany()
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.User", b =>
                 {
                     b.HasOne("Domain.Rank", "Rank")
                         .WithMany()
-                        .HasForeignKey("RankId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RankId");
                 });
 #pragma warning restore 612, 618
         }
