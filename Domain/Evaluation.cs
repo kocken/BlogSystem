@@ -5,7 +5,7 @@ namespace Domain
 {
     public class Evaluation
     {
-        [Required]
+        [Key, Required]
         public int Id { get; set; }
 
         [Required]

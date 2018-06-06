@@ -4,7 +4,7 @@ namespace Domain
 {
     public class Comment : Post
     {
-        [Required]
+        [Key, Required]
         public int Id { get; set; }
 
         [Required]

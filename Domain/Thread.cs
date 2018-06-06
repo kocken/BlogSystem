@@ -10,7 +10,7 @@ namespace Domain
             Comments = new List<Comment>();
         }
 
-        [Required]
+        [Key, Required]
         public int Id { get; set; }
 
         [Required, StringLength(20, MinimumLength = 1)]

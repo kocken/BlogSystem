@@ -4,7 +4,7 @@ namespace Domain
 {
     public class Rank
     {
-        [Required]
+        [Key, Required]
         public int Id { get; set; }
 
         [Required, StringLength(20, MinimumLength = 1)]
