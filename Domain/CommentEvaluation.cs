@@ -6,11 +6,13 @@ namespace Domain
     {
         [Key, Required]
         public int CommentId { get; set; }
+
         [Key, Required]
         public int EvaluationId { get; set; }
 
         [Required]
         public Comment Comment { get; set; }
+
         [Required]
         public Evaluation Evaluation { get; set; }
     }

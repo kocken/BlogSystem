@@ -12,6 +12,7 @@ namespace Domain
 
         [Required]
         public int Id { get; set; }
+
         [Required, StringLength(20, MinimumLength = 1)]
         public string Title { get; set; }
 

@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20180606231945_EvaluationValueTest1")]
+    partial class EvaluationValueTest1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,8 +73,6 @@ namespace Blog.Migrations
 
                     b.Property<DateTime>("EvaluationTime");
 
-                    b.Property<int?>("EvaluationValueId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
@@ -81,24 +81,7 @@ namespace Blog.Migrations
 
                     b.HasIndex("EvaluatedOnId");
 
-                    b.HasIndex("EvaluationValueId");
-
                     b.ToTable("Evaluation");
-                });
-
-            modelBuilder.Entity("Domain.EvaluationValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EvaluationValue");
                 });
 
             modelBuilder.Entity("Domain.Rank", b =>
@@ -207,11 +190,6 @@ namespace Blog.Migrations
                     b.HasOne("Domain.User", "EvaluatedOn")
                         .WithMany()
                         .HasForeignKey("EvaluatedOnId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.EvaluationValue", "EvaluationValue")
-                        .WithMany()
-                        .HasForeignKey("EvaluationValueId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

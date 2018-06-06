@@ -6,6 +6,7 @@ namespace Domain
     {
         [Required]
         public int Id { get; set; }
+
         [Required]
         public Thread Thread { get; set; }
     }
