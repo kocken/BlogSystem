@@ -9,7 +9,7 @@ namespace Domain
         public int Id { get; set; }
         [Required]
         public User Author { get; set; }
-        [Required, MaxLength(2000)]
+        [Required, StringLength(2000, MinimumLength = 1)]
         public string Message { get; set; }
         [Required]
         public DateTime CreationTime { get; set; }

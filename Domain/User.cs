@@ -7,9 +7,9 @@ namespace Domain
     {
         [Required]
         public int Id { get; set; }
-        [Required, MaxLength(20)]
+        [Required, StringLength(20, MinimumLength = 1)]
         public string Username { get; set; }
-        [Required, MaxLength(20)]
+        [Required, StringLength(20, MinimumLength = 5)]
         public string Password { get; set; }
         [Required]
         public Rank Rank { get; set; }

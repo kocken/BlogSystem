@@ -10,7 +10,7 @@ namespace Domain
             Comments = new List<Post>();
         }
 
-        [Required, MaxLength(20)]
+        [Required, StringLength(20, MinimumLength = 1)]
         public string Title { get; set; }
         public List<Post> Comments { get; set; }
     }
