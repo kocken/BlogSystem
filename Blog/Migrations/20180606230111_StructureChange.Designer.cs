@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20180606230111_StructureChange")]
+    partial class StructureChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,8 +65,6 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CommentId");
-
                     b.Property<int>("EvaluatedById");
 
                     b.Property<int>("EvaluatedOnId");
@@ -73,15 +73,17 @@ namespace Blog.Migrations
 
                     b.Property<int>("EvaluationValueId");
 
-                    b.HasKey("Id");
+                    b.Property<int>("PostId");
 
-                    b.HasIndex("CommentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EvaluatedById");
 
                     b.HasIndex("EvaluatedOnId");
 
                     b.HasIndex("EvaluationValueId");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Evaluation");
                 });
@@ -194,11 +196,6 @@ namespace Blog.Migrations
 
             modelBuilder.Entity("Domain.Evaluation", b =>
                 {
-                    b.HasOne("Domain.Comment", "Comment")
-                        .WithMany()
-                        .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Domain.User", "EvaluatedBy")
                         .WithMany()
                         .HasForeignKey("EvaluatedById")
@@ -212,6 +209,11 @@ namespace Blog.Migrations
                     b.HasOne("Domain.EvaluationValue", "EvaluationValue")
                         .WithMany()
                         .HasForeignKey("EvaluationValueId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Comment", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

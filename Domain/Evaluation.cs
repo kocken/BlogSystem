@@ -8,7 +8,7 @@ namespace Domain
         [Required]
         public int Id { get; set; }
         [Required]
-        public Post Post { get; set; }
+        public Comment Comment { get; set; }
         [Required]
         public EvaluationValue EvaluationValue { get; set; }
         [Required]
