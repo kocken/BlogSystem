@@ -2,8 +2,8 @@
 {
     public class PostEvaluation
     {
-        public int PostID { get; set; }
-        public int EvaluationID { get; set; }
+        public int PostId { get; set; }
+        public int EvaluationId { get; set; }
 
         public Post Post { get; set; }
         public Evaluation Evaluation { get; set; }

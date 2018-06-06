@@ -20,7 +20,13 @@ namespace Data
             modelBuilder.Entity<Thread>().ToTable("Thread");
             modelBuilder.Entity<Post>().ToTable("Post");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
-            modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation").HasKey(m => new { m.PostID, m.EvaluationID });
+            modelBuilder.Entity<PostEvaluation>().ToTable("PostEvaluation").HasKey(m => new { m.PostId, m.EvaluationId });
         }
+
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server = (localdb)\\mssqllocaldb; Database = MKBlog; Trusted_Connection = True;");
+        }*/
+
     }
 }
