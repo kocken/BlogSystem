@@ -6,7 +6,7 @@ namespace Data
 {
     public static class DbInitializer
     {
-        private static bool ReInitialize = true; // NOTE: when true the DB will be reset with the entries below
+        private static bool ReInitialize = false; // NOTE: when true the DB will be reset with the entries below
 
         public static void Initialize(BlogContext context)
         {

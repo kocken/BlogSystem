@@ -33,6 +33,7 @@ namespace Blog
                 .UseLoggerFactory(_loggerFactory)
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blog")));
 
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddMvc();
         }
 
@@ -54,8 +55,15 @@ namespace Blog
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "root",
+                    template: "{action}/{id?}",
+                    defaults: new {controller = "Home", action = "Index"}
+                );
+
+                routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                );
             });
         }
     }
