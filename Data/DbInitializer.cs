@@ -12,26 +12,23 @@ namespace Data
         {
             context.Database.EnsureCreated();
 
-            // Returns true if there are any rank entries
-            if (context.Ranks.Any())
+            if (ReInitialize) // removes all entries from database
             {
-                if (ReInitialize)
-                {
-                    context.ThreadTags.RemoveRange(context.ThreadTags.Where(t => t.ThreadId == t.ThreadId));
-                    context.Tags.RemoveRange(context.Tags.Where(t => t.Id == t.Id));
-                    context.Evaluations.RemoveRange(context.Evaluations.Where(e => e.Id == e.Id));
-                    context.EvaluationValues.RemoveRange(context.EvaluationValues.Where(e => e.Id == e.Id));
-                    context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id));
-                    context.Threads.RemoveRange(context.Threads.Where(t => t.Id == t.Id));
-                    context.Users.RemoveRange(context.Users.Where(u => u.Id == u.Id));
-                    context.Ranks.RemoveRange(context.Ranks.Where(r => r.Id == r.Id));
+                context.ThreadTags.RemoveRange(context.ThreadTags.Where(t => t.ThreadId == t.ThreadId));
+                context.Tags.RemoveRange(context.Tags.Where(t => t.Id == t.Id));
+                context.Evaluations.RemoveRange(context.Evaluations.Where(e => e.Id == e.Id));
+                context.EvaluationValues.RemoveRange(context.EvaluationValues.Where(e => e.Id == e.Id));
+                context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id));
+                context.Threads.RemoveRange(context.Threads.Where(t => t.Id == t.Id));
+                context.Users.RemoveRange(context.Users.Where(u => u.Id == u.Id));
+                context.Ranks.RemoveRange(context.Ranks.Where(r => r.Id == r.Id));
 
-                    context.SaveChanges();
-                }
-                else
-                {
-                    return; // DB has been seeded, end method
-                }
+                context.SaveChanges();
+            }
+
+            if (context.Ranks.Any()) // true if the code below have been run before and ReInitialize = false
+            {
+                return; // DB has been seeded, end method
             }
 
 
