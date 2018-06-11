@@ -17,7 +17,8 @@ namespace Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<EvaluationValue> EvaluationValues { get; set; }
         public DbSet<Evaluation> Evaluations { get; set; }
-        public DbSet<CommentEvaluation> CommentEvaluations { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<ThreadTag> ThreadTags { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +33,11 @@ namespace Data
             modelBuilder.Entity<Comment>().ToTable("Comment");
             modelBuilder.Entity<EvaluationValue>().ToTable("EvaluationValue");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
-            modelBuilder.Entity<CommentEvaluation>().ToTable("CommentEvaluation").HasKey(m => new { m.CommentId, m.EvaluationId });
+            modelBuilder.Entity<Tag>().ToTable("Tag");
+            modelBuilder.Entity<ThreadTag>().ToTable("ThreadTag").HasKey(t => new {
+                t.ThreadId,
+                t.TagId
+            });
         }
 
     }

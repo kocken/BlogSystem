@@ -6,7 +6,7 @@ namespace Data
 {
     public static class DbInitializer
     {
-        private static bool ReInitialize = false; // NOTE: when true the DB will be reset with the entries below
+        private static bool ReInitialize = true; // NOTE: when true the DB will be reset with the entries below
 
         public static void Initialize(BlogContext context)
         {
@@ -17,7 +17,8 @@ namespace Data
             {
                 if (ReInitialize)
                 {
-                    context.CommentEvaluations.RemoveRange(context.CommentEvaluations.Where(c => c.CommentId == c.CommentId));
+                    context.ThreadTags.RemoveRange(context.ThreadTags.Where(t => t.ThreadId == t.ThreadId));
+                    context.Tags.RemoveRange(context.Tags.Where(t => t.Id == t.Id));
                     context.Evaluations.RemoveRange(context.Evaluations.Where(e => e.Id == e.Id));
                     context.EvaluationValues.RemoveRange(context.EvaluationValues.Where(e => e.Id == e.Id));
                     context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id));
@@ -147,20 +148,36 @@ namespace Data
             context.SaveChanges();
 
 
-            CommentEvaluation[] commentEvaluations = new CommentEvaluation[]
+            Tag[] tags = new Tag[]
             {
-                new CommentEvaluation{
-                    Comment = comments[0],
-                    Evaluation = evaluations[0]
+                new Tag{ Name = "Comedy" }, 
+                new Tag{ Name = "Information" }, 
+                new Tag{ Name = "Political" },
+                new Tag{ Name = "Sponsored" },
+                new Tag{ Name = "Discussion" },
+                new Tag{ Name = "Announcement" }
+            };
+            foreach (Tag t in tags)
+            {
+                context.Tags.Add(t);
+            }
+            context.SaveChanges();
+
+
+            ThreadTag[] threadTags = new ThreadTag[]
+            {
+                new ThreadTag{
+                    Thread = threads[0],
+                    Tag = Array.Find(tags, t => t.Name.Equals("Discussion"))
                 },
-                new CommentEvaluation{
-                    Comment = comments[0],
-                    Evaluation = evaluations[1]
+                new ThreadTag{
+                    Thread = threads[0],
+                    Tag = Array.Find(tags, t => t.Name.Equals("Announcement"))
                 }
             };
-            foreach (CommentEvaluation c in commentEvaluations)
+            foreach (ThreadTag t in threadTags)
             {
-                context.CommentEvaluations.Add(c);
+                context.ThreadTags.Add(t);
             }
             context.SaveChanges();
         }
