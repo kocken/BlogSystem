@@ -33,6 +33,7 @@ namespace Blog
                 .UseLoggerFactory(_loggerFactory)
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blog")));
 
+
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddMvc();
         }
