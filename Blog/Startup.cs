@@ -11,7 +11,7 @@ namespace Blog
 {
     public class Startup
     {
-        public static readonly LoggerFactory logger 
+        public static readonly LoggerFactory _loggerFactory
             = new LoggerFactory(new[]
             {
                 new ConsoleLoggerProvider((category, level) =>
@@ -30,7 +30,7 @@ namespace Blog
         {
             services.AddDbContext<BlogContext>(options => options
                 .EnableSensitiveDataLogging()
-                .UseLoggerFactory(logger)
+                .UseLoggerFactory(_loggerFactory)
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blog")));
 
             services.AddMvc();
