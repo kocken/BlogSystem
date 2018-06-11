@@ -8,12 +8,6 @@ namespace Data
 {
     public class BlogContext : DbContext
     {
-        //public static readonly LoggerFactory _loggerFactory
-        //    = new LoggerFactory(new[]
-        //    {
-        //        new ConsoleLoggerProvider((category, level) =>
-        //        category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information, true)
-        //    });
 
         public BlogContext(DbContextOptions<BlogContext> options) : base(options) {}
 
@@ -32,21 +26,14 @@ namespace Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
-            modelBuilder.Entity<Rank>().ToTable("Rank");
-            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Rank>().ToTable("Rank").HasIndex(r => r.Name).IsUnique();
+            modelBuilder.Entity<User>().ToTable("User").HasIndex(u => u.Username).IsUnique();
             modelBuilder.Entity<Thread>().ToTable("Thread");
             modelBuilder.Entity<Comment>().ToTable("Comment");
             modelBuilder.Entity<EvaluationValue>().ToTable("EvaluationValue");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
             modelBuilder.Entity<CommentEvaluation>().ToTable("CommentEvaluation").HasKey(m => new { m.CommentId, m.EvaluationId });
         }
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    base.OnConfiguring(optionsBuilder);
-        //    optionsBuilder.EnableSensitiveDataLogging();
-        //    optionsBuilder.UseLoggerFactory(_loggerFactory);
-        //}
 
     }
 }

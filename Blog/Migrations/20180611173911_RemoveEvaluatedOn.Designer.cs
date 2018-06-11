@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20180611173911_RemoveEvaluatedOn")]
+    partial class RemoveEvaluatedOn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,11 +67,11 @@ namespace Blog.Migrations
 
                     b.Property<int>("CommentId");
 
-                    b.Property<int>("EvaluatedById");
+                    b.Property<int?>("EvaluatedById");
 
-                    b.Property<DateTime>("EvaluationTime");
+                    b.Property<DateTime?>("EvaluationTime");
 
-                    b.Property<int>("EvaluationValueId");
+                    b.Property<int?>("EvaluationValueId");
 
                     b.HasKey("Id");
 

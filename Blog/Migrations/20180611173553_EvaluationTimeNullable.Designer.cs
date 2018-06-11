@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(BlogContext))]
-    partial class BlogContextModelSnapshot : ModelSnapshot
+    [Migration("20180611173553_EvaluationTimeNullable")]
+    partial class EvaluationTimeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,17 +67,21 @@ namespace Blog.Migrations
 
                     b.Property<int>("CommentId");
 
-                    b.Property<int>("EvaluatedById");
+                    b.Property<int?>("EvaluatedById");
 
-                    b.Property<DateTime>("EvaluationTime");
+                    b.Property<int>("EvaluatedOnId");
 
-                    b.Property<int>("EvaluationValueId");
+                    b.Property<DateTime?>("EvaluationTime");
+
+                    b.Property<int?>("EvaluationValueId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
 
                     b.HasIndex("EvaluatedById");
+
+                    b.HasIndex("EvaluatedOnId");
 
                     b.HasIndex("EvaluationValueId");
 
@@ -204,6 +210,11 @@ namespace Blog.Migrations
                     b.HasOne("Domain.User", "EvaluatedBy")
                         .WithMany()
                         .HasForeignKey("EvaluatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.User", "EvaluatedOn")
+                        .WithMany()
+                        .HasForeignKey("EvaluatedOnId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.EvaluationValue", "EvaluationValue")

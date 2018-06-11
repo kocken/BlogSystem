@@ -1,71 +1,167 @@
-﻿using System.Linq;
+﻿using Domain;
+using System;
+using System.Linq;
 
 namespace Data
 {
     public static class DbInitializer
     {
+        private static bool ReInitialize = false; // NOTE: when true the DB will be reset with the entries below
+
         public static void Initialize(BlogContext context)
         {
             context.Database.EnsureCreated();
 
-            // Look for any ranks
-            if (context.Users.Any())
+            // Returns true if there are any rank entries
+            if (context.Ranks.Any())
             {
-                return; // DB has been seeded
+                if (ReInitialize)
+                {
+                    context.CommentEvaluations.RemoveRange(context.CommentEvaluations.Where(c => c.CommentId == c.CommentId));
+                    context.Evaluations.RemoveRange(context.Evaluations.Where(e => e.Id == e.Id));
+                    context.EvaluationValues.RemoveRange(context.EvaluationValues.Where(e => e.Id == e.Id));
+                    context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id));
+                    context.Threads.RemoveRange(context.Threads.Where(t => t.Id == t.Id));
+                    context.Users.RemoveRange(context.Users.Where(u => u.Id == u.Id));
+                    context.Ranks.RemoveRange(context.Ranks.Where(r => r.Id == r.Id));
+
+                    context.SaveChanges();
+                }
+                else
+                {
+                    return; // DB has been seeded, end method
+                }
             }
 
-            //var students = new Student[]
-            //{
-            //new Student{FirstMidName="Carson",LastName="Alexander",EnrollmentDate=DateTime.Parse("2005-09-01")},
-            //new Student{FirstMidName="Meredith",LastName="Alonso",EnrollmentDate=DateTime.Parse("2002-09-01")},
-            //new Student{FirstMidName="Arturo",LastName="Anand",EnrollmentDate=DateTime.Parse("2003-09-01")},
-            //new Student{FirstMidName="Gytis",LastName="Barzdukas",EnrollmentDate=DateTime.Parse("2002-09-01")},
-            //new Student{FirstMidName="Yan",LastName="Li",EnrollmentDate=DateTime.Parse("2002-09-01")},
-            //new Student{FirstMidName="Peggy",LastName="Justice",EnrollmentDate=DateTime.Parse("2001-09-01")},
-            //new Student{FirstMidName="Laura",LastName="Norman",EnrollmentDate=DateTime.Parse("2003-09-01")},
-            //new Student{FirstMidName="Nino",LastName="Olivetto",EnrollmentDate=DateTime.Parse("2005-09-01")}
-            //};
-            //foreach (Student s in students)
-            //{
-            //    context.Students.Add(s);
-            //}
-            //context.SaveChanges();
 
-            //var courses = new Course[]
-            //{
-            //new Course{CourseID=1050,Title="Chemistry",Credits=3},
-            //new Course{CourseID=4022,Title="Microeconomics",Credits=3},
-            //new Course{CourseID=4041,Title="Macroeconomics",Credits=3},
-            //new Course{CourseID=1045,Title="Calculus",Credits=4},
-            //new Course{CourseID=3141,Title="Trigonometry",Credits=4},
-            //new Course{CourseID=2021,Title="Composition",Credits=3},
-            //new Course{CourseID=2042,Title="Literature",Credits=4}
-            //};
-            //foreach (Course c in courses)
-            //{
-            //    context.Courses.Add(c);
-            //}
-            //context.SaveChanges();
+            Rank[] ranks = new Rank[]
+            {
+                new Rank{ Name = "Member" },
+                new Rank{ Name = "Moderator" },
+                new Rank{ Name = "Administrator" }
+            };
+            foreach (Rank r in ranks)
+            {
+                context.Ranks.Add(r);
+            }
+            context.SaveChanges();
 
-            //var enrollments = new Enrollment[]
-            //{
-            //new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},
-            //new Enrollment{StudentID=1,CourseID=4022,Grade=Grade.C},
-            //new Enrollment{StudentID=1,CourseID=4041,Grade=Grade.B},
-            //new Enrollment{StudentID=2,CourseID=1045,Grade=Grade.B},
-            //new Enrollment{StudentID=2,CourseID=3141,Grade=Grade.F},
-            //new Enrollment{StudentID=2,CourseID=2021,Grade=Grade.F},
-            //new Enrollment{StudentID=3,CourseID=1050},
-            //new Enrollment{StudentID=4,CourseID=1050},
-            //new Enrollment{StudentID=4,CourseID=4022,Grade=Grade.F},
-            //new Enrollment{StudentID=5,CourseID=4041,Grade=Grade.C},
-            //new Enrollment{StudentID=6,CourseID=1045},
-            //new Enrollment{StudentID=7,CourseID=3141,Grade=Grade.A},
-            //};
-            //foreach (Enrollment e in enrollments)
-            //{
-            //    context.Enrollments.Add(e);
-            //}
+
+            User[] users = new User[]
+            {
+                new User{
+                    Username = "Mikael",
+                    Password = "pass123",
+                    Rank = Array.Find(ranks, r => r.Name.Equals("Administrator")),
+                    JoinTime = DateTime.Now
+                },
+                new User{
+                    Username = "Mikael2",
+                    Password = "pass123",
+                    Rank = Array.Find(ranks, r => r.Name.Equals("Moderator")),
+                    JoinTime = DateTime.Now
+                },
+                new User{
+                    Username = "Billy",
+                    Password = "qwerty",
+                    Rank = Array.Find(ranks, r => r.Name.Equals("Member")),
+                    JoinTime = DateTime.Now
+                }
+            };
+            foreach (User u in users)
+            {
+                context.Users.Add(u);
+            }
+            context.SaveChanges();
+
+
+            Thread[] threads = new Thread[]
+            {
+                new Thread{
+                    User = Array.Find(users, u => u.Username.Equals("Mikael")),
+                    Title = "First thread",
+                    Message = "This is the first thread made!",
+                    CreationTime = DateTime.Now
+                }
+            };
+            foreach (Thread t in threads)
+            {
+                context.Threads.Add(t);
+            }
+            context.SaveChanges();
+
+
+            Comment[] comments = new Comment[]
+            {
+                new Comment{
+                    User = Array.Find(users, u => u.Username.Equals("Billy")),
+                    Thread = threads[0],
+                    Message = "Cool!",
+                    CreationTime = DateTime.Now
+                },
+                new Comment{
+                    User = Array.Find(users, u => u.Username.Equals("Billy")),
+                    Thread = threads[0],
+                    Message = "Can I get mod?",
+                    CreationTime = DateTime.Now
+                }
+            };
+            foreach (Comment c in comments)
+            {
+                context.Comments.Add(c);
+            }
+            context.SaveChanges();
+
+
+            EvaluationValue[] evaluationValues = new EvaluationValue[]
+            {
+                new EvaluationValue{ Name = "Approved" },
+                new EvaluationValue{ Name = "Disapproved" }
+            };
+            foreach (EvaluationValue e in evaluationValues)
+            {
+                context.EvaluationValues.Add(e);
+            }
+            context.SaveChanges();
+
+
+            Evaluation[] evaluations = new Evaluation[]
+            {
+                new Evaluation{
+                    Comment = comments[0],
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael")),
+                    EvaluationTime = DateTime.Now
+                },
+                new Evaluation{
+                    Comment = comments[0],
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael2")),
+                    EvaluationTime = DateTime.Now
+                }
+            };
+            foreach (Evaluation e in evaluations)
+            {
+                context.Evaluations.Add(e);
+            }
+            context.SaveChanges();
+
+
+            CommentEvaluation[] commentEvaluations = new CommentEvaluation[]
+            {
+                new CommentEvaluation{
+                    Comment = comments[0],
+                    Evaluation = evaluations[0]
+                },
+                new CommentEvaluation{
+                    Comment = comments[0],
+                    Evaluation = evaluations[1]
+                }
+            };
+            foreach (CommentEvaluation c in commentEvaluations)
+            {
+                context.CommentEvaluations.Add(c);
+            }
             context.SaveChanges();
         }
     }
