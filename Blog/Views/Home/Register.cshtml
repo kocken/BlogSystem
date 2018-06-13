@@ -1,16 +1,16 @@
-﻿@{
+﻿@model Domain.User
+
+@{
     ViewData["Title"] = "Register";
 }
 
 <link rel="stylesheet" href="~/css/signin.css" />
 
-<form class="form-signin">
+<form class="form-signin" action="/Home/UserCreate">
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-    <label for="inputUsername" class="sr-only">Username</label>
-    <input type="text" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
-    <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
-    <br />
-    <a asp-area="" asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
+    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", required = true, autofocus = true })
+    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = true })<br />
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button><br />
+
+    <a asp-area="Login" asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
 </form>

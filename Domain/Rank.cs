@@ -2,6 +2,11 @@
 
 namespace Domain
 {
+    public enum Ranks
+    {
+        Member, Moderator, Administrator
+    }
+
     public class Rank
     {
         [Key, Required]

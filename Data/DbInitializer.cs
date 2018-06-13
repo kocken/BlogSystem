@@ -34,9 +34,9 @@ namespace Data
 
             Rank[] ranks = new Rank[]
             {
-                new Rank{ Name = "Member" },
-                new Rank{ Name = "Moderator" },
-                new Rank{ Name = "Administrator" }
+                new Rank{ Name = Ranks.Member.ToString() },
+                new Rank{ Name = Ranks.Moderator.ToString() },
+                new Rank{ Name = Ranks.Administrator.ToString() }
             };
             foreach (Rank r in ranks)
             {
@@ -50,19 +50,19 @@ namespace Data
                 new User{
                     Username = "Mikael",
                     Password = "pass123",
-                    Rank = Array.Find(ranks, r => r.Name.Equals("Administrator")),
+                    Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Administrator.ToString())),
                     JoinTime = DateTime.Now
                 },
                 new User{
                     Username = "Mikael2",
                     Password = "pass123",
-                    Rank = Array.Find(ranks, r => r.Name.Equals("Moderator")),
+                    Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Moderator.ToString())),
                     JoinTime = DateTime.Now
                 },
                 new User{
                     Username = "Billy",
                     Password = "qwerty",
-                    Rank = Array.Find(ranks, r => r.Name.Equals("Member")),
+                    Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Member.ToString())),
                     JoinTime = DateTime.Now
                 }
             };

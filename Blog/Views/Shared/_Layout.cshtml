@@ -26,34 +26,32 @@
 <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blog</a>
+            <a class="navbar-brand" asp-area="Index" asp-controller="Home" asp-action="Index">Blog</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                        <a class="nav-link" asp-area="About" asp-controller="Home" asp-action="About">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">
+                        <a class="nav-link" asp-area="Login" asp-controller="Home" asp-action="Login">
                             <i class="fas fa-sign-in-alt"></i> Login
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Register">
+                        <a class="nav-link" asp-area="Register" asp-controller="Home" asp-action="Register">
                             <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <p class="nav-link">
-                            <i class="fas fa-user"></i> [User]
-                        </p>
+                    <li class="nav-item nav-link">
+                        <i class="fas fa-user"></i> [User]
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Logout">
+                        <a class="nav-link" asp-area="Logout" asp-controller="Home" asp-action="Logout">
                             <i class="fas fa-sign-out-alt"></i> Logout
                         </a>
                     </li>

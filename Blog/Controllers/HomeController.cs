@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Blog.Models;
+using Domain;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Blog.Controllers
 {
@@ -33,6 +35,28 @@ namespace Blog.Controllers
         public IActionResult Register()
         {
             return View();
+        }
+
+        public IActionResult UserCreate(User user)
+        {
+            if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
+                ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
+            {
+                //user.Rank = Ranks.Member; grab from DbContext
+                user.JoinTime = DateTime.Now;
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Register");
+        }
+
+        public IActionResult UserLogin(User user)
+        {
+            if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
+                ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Login");
         }
 
         public IActionResult Error()
