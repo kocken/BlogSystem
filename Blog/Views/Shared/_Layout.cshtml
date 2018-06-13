@@ -39,12 +39,12 @@
                 <ul class="navbar-nav navbar-right">
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Login">
-                            <span class="glyphicon glyphicon-log-in"></span> Login
+                            <i class="fas fa-sign-in-alt"></i> Login
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Register">
-                            <span class="glyphicon glyphicon-user"></span> Register
+                            <i class="fas fa-user-plus"></i> Register
                         </a>
                     </li>
                 </ul>
@@ -63,6 +63,7 @@
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/fontawesome-all.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
