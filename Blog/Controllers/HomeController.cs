@@ -20,12 +20,17 @@ namespace Blog.Controllers
             return View();
         }
 
-        public IActionResult Register()
+        public IActionResult Login()
         {
             return View();
         }
 
-        public IActionResult Login()
+        public IActionResult Logout()
+        {
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Register()
         {
             return View();
         }
