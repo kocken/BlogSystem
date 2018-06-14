@@ -5,12 +5,28 @@
 }
 
 <link rel="stylesheet" href="~/css/signin.css" />
+@if (ViewBag.ShowFloatingLabels)
+{
+    <link rel="stylesheet" href="~/css/floating-labels.css" />
+}
 
 <form class="form-signin" action="/Home/UserCreate">
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
     <div class="relative">
-        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", required = true, autofocus = true })
-        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = true })<br />
+        <div class="form-label-group">
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", id = "username", required = true, autofocus = true })
+            @if (ViewBag.ShowFloatingLabels)
+            {
+                <label for="username" class="opacity" id="usernameLabel">Username</label>
+            }
+        </div>
+        <div class="form-label-group">
+            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", id = "password", required = true })
+            @if (ViewBag.ShowFloatingLabels)
+            {
+                <label for="password" class="opacity" id="passwordLabel">Password</label>
+            }
+        </div>
         <div style="color:darkgrey">
             <i class="fas fa-user fa-lg icon1"></i>
             <i class="fas fa-lock fa-lg icon2"></i>
@@ -20,3 +36,8 @@
 
     <a asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
 </form>
+
+@if (ViewBag.ShowFloatingLabels)
+{
+    <script src="~/js/floating-labels-focus.js"></script>
+}

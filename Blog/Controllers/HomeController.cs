@@ -24,6 +24,7 @@ namespace Blog.Controllers
 
         public IActionResult Login()
         {
+            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View();
         }
 
@@ -34,6 +35,7 @@ namespace Blog.Controllers
 
         public IActionResult Register()
         {
+            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View();
         }
 
@@ -62,6 +64,13 @@ namespace Blog.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private bool FloatingLabelsCompatibleBrowser()
+        {
+            string browserName = Request.Headers["User-Agent"].ToString().ToLower();
+            return !browserName.Contains("edge") && 
+                (browserName.Contains("chrome") || browserName.Contains("firefox") || browserName.Contains("safari"));
         }
     }
 }
