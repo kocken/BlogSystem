@@ -4,15 +4,6 @@
     ViewData["Title"] = "Register";
 }
 
-<link rel="stylesheet" href="~/css/signin.css" />
-@if (ViewBag.ShowFloatingLabels)
-{
-    <link rel="stylesheet" href="~/css/floating-labels.css" />
-}
-
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
-<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
-
 <form class="form-signin" action="register" method="post">
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
     <div class="relative">
@@ -42,7 +33,12 @@
     <a asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
 </form>
 
+<link rel="stylesheet" href="~/css/signin.css" />
 @if (ViewBag.ShowFloatingLabels)
 {
+    <link rel="stylesheet" href="~/css/floating-labels.css" />
     <script src="~/js/floating-labels.js"></script>
 }
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
