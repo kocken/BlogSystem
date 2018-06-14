@@ -3,10 +3,6 @@
     padding-bottom: 85px;
 }
 
-.navbar-brand {
-    font-size: xx-large;
-}
-
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
@@ -36,4 +32,13 @@
     .carousel-caption {
         display: none;
     }
+}
+
+.navbar-brand {
+    font-size: xx-large;
+}
+
+input[type]:focus, textarea:focus {
+    box-shadow: 0 0 4px rgba(0, 150, 255, 1);
+    border: 1px solid rgba(0, 150, 255, 1);
 }

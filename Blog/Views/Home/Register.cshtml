@@ -8,9 +8,15 @@
 
 <form class="form-signin" action="/Home/UserCreate">
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
-    @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", required = true, autofocus = true })
-    @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = true })<br />
+    <div class="relative">
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", required = true, autofocus = true })
+        @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", required = true })<br />
+        <div style="color:darkgrey">
+            <i class="fas fa-user fa-lg icon1"></i>
+            <i class="fas fa-lock fa-lg icon2"></i>
+        </div>
+    </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button><br />
 
-    <a asp-area="Login" asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
+    <a asp-controller="Home" asp-action="Login">Already have an account? Login here</a>
 </form>
