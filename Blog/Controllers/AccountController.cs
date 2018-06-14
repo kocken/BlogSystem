@@ -20,7 +20,7 @@ namespace Blog.Controllers
             if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
                 ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View(user);
@@ -41,7 +41,7 @@ namespace Blog.Controllers
             {
                 //user.Rank = Ranks.Member; grab from DbContext
                 user.JoinTime = DateTime.Now;
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View(user);

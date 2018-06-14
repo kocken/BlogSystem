@@ -6,14 +6,7 @@ $('#passwordLabel').click(function () {
     $('#password').focus();
 });
 
-positionIcon2();
-
-window.onresize = function (event) {
-    positionIcon2();
-};
-
-function positionIcon2() {
+$('*').on('blur change click dblclick error focus focusin focusout hover keydown keypress keyup load mousedown mouseenter mouseleave mousemove mouseout mouseover mouseup resize scroll select submit', function () {
     var rect = document.getElementById('password').getBoundingClientRect();
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
-    document.getElementsByClassName("icon2")[0].style.top = "" + rect.top-135 + "px";
-}
+    document.getElementsByClassName("icon2")[0].style.top = "" + rect.top - 135 + "px";
+});

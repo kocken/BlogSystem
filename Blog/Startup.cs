@@ -58,7 +58,13 @@ namespace Blog
                 routes.MapRoute(
                     name: "root",
                     template: "{action}/{id?}",
-                    defaults: new {controller = "Home", action = "Index"}
+                    defaults: new { controller = "Home", action = "Index" }
+                );
+
+                routes.MapRoute(
+                    name: "account",
+                    template: "{action}/{id?}",
+                    defaults: new { controller = "Account" }
                 );
 
                 routes.MapRoute(
