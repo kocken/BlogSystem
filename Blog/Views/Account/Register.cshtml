@@ -10,22 +10,24 @@
     <link rel="stylesheet" href="~/css/floating-labels.css" />
 }
 
-<form class="form-signin" action="/Home/UserCreate">
+<form class="form-signin" action="register" method="post">
     <h1 class="h3 mb-3 font-weight-normal">Register</h1>
     <div class="relative">
         <div class="form-label-group">
-            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", id = "username", required = true, autofocus = true })
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", type = "text", id = "username", required = true, autofocus = true })
             @if (ViewBag.ShowFloatingLabels)
             {
                 <label for="username" class="opacity" id="usernameLabel">Username</label>
             }
+            <span asp-validation-for="Username" class="text-danger"></span>
         </div>
         <div class="form-label-group">
-            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", id = "password", required = true })
+            @Html.TextBoxFor(m => m.Password, new { @class = "form-control", placeholder = "Password", type = "password", id = "password", required = true })
             @if (ViewBag.ShowFloatingLabels)
             {
                 <label for="password" class="opacity" id="passwordLabel">Password</label>
             }
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div style="color:darkgrey">
             <i class="fas fa-user fa-lg icon1"></i>
@@ -39,5 +41,5 @@
 
 @if (ViewBag.ShowFloatingLabels)
 {
-    <script src="~/js/floating-labels-focus.js"></script>
+    <script src="~/js/floating-labels.js"></script>
 }
