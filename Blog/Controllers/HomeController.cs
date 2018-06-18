@@ -5,9 +5,6 @@ using Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using System.Linq;
-using Domain;
-using System.Collections.Generic;
 
 namespace Blog.Controllers
 {
@@ -24,8 +21,7 @@ namespace Blog.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Thread> threads = _context.Threads.ToList();
-            return View(await _context.Threads.ToListAsync());
+            return View(await _context.Threads.Include(_ => _.User).ToListAsync());
         }
 
         public IActionResult About()

@@ -2,10 +2,8 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Controllers
@@ -60,12 +58,20 @@ namespace Blog.Controllers
                 }
                 else
                 {
-                    Rank defaultRank = _context.Ranks.Single(r => r.Name.Equals("Member"));
+                    Rank defaultRank = _context.Ranks.Single(r => r.Name.Equals(Ranks.Member.ToString()));
                     if (defaultRank != null)
                     {
                         user.Rank = defaultRank;
                         user.JoinTime = DateTime.Now;
-                        return RedirectToAction("Index", "Home");
+                        _context.Update(user);
+                        if (_context.SaveChanges() > 0)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            _logger.LogError($"Saving after updating context with {user} returned <= 0");
+                        }
                     }
                     else
                     {
