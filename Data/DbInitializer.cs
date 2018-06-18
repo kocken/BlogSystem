@@ -80,6 +80,12 @@ namespace Data
                     Title = "First thread",
                     Message = "This is the first thread made!",
                     CreationTime = DateTime.Now
+                },
+                new Thread{
+                    User = Array.Find(users, u => u.Username.Equals("Mikael")),
+                    Title = "Second thread test",
+                    Message = "Just a test",
+                    CreationTime = DateTime.Now
                 }
             };
             foreach (Thread t in threads)

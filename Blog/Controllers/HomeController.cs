@@ -1,14 +1,31 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Blog.Models;
+using Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Linq;
+using Domain;
+using System.Collections.Generic;
 
 namespace Blog.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly BlogContext _context;
+        private readonly ILogger _logger;
+
+        public HomeController(BlogContext context, ILogger<AccountController> logger)
         {
-            return View();
+            _context = context;
+            _logger = logger;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            List<Thread> threads = _context.Threads.ToList();
+            return View(await _context.Threads.ToListAsync());
         }
 
         public IActionResult About()

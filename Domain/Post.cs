@@ -6,6 +6,9 @@ namespace Domain
     public class Post
     {
         [Required]
+        public int UserId { get; set; }
+
+        [Required]
         public User User { get; set; }
 
         [Required, StringLength(2000, MinimumLength = 1)]
