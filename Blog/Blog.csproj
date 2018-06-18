@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20180611173345_EvaluationTimeNullable.Designer.cs" />
     <Compile Remove="Migrations\20180611212353_test5252.cs" />
     <Compile Remove="Migrations\20180611212353_test5252.Designer.cs" />
+    <Compile Remove="Migrations\20180618190837_test.cs" />
+    <Compile Remove="Migrations\20180618190837_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -55,6 +55,7 @@ namespace Blog.Controllers
                 {
                     _logger.LogInformation
                         ("User tried to register account with already existing username \"" + user.Username + "\"");
+                    ModelState.AddModelError("Username", $"The username \"{user.Username}\" is already in use");
                 }
                 else
                 {
@@ -66,16 +67,19 @@ namespace Blog.Controllers
                         _context.Update(user);
                         if (_context.SaveChanges() > 0)
                         {
+                            _logger.LogInformation($"User \"{user.Username}\" was registered");
                             return RedirectToAction("Index", "Home");
                         }
                         else
                         {
-                            _logger.LogError($"Saving after updating context with {user} returned <= 0");
+                            _logger.LogError($"Saving after updating context with user \"{user}\" returned <= 0");
+                            ViewBag.ErrorMessage = "An issue occured, try again (Error code: 1)";
                         }
                     }
                     else
                     {
                         _logger.LogError("Default rank \"Member\" failed to get grabbed from database context");
+                        ViewBag.ErrorMessage = "An issue occured, try again (Error code: 2)";
                     }
                 }
             }
