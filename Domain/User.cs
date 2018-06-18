@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain
@@ -12,6 +13,7 @@ namespace Domain
             StringLength(20, MinimumLength = 1, 
             ErrorMessage = "Username needs to be between 1 and 20 characters"), 
             RegularExpression("^[a-zA-Z0-9]+$", ErrorMessage = "Username can only contain letters and numbers")]
+        [Remote(action: "IsUsernameAvailable", controller: "Account")]
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Password is required"), StringLength(20, MinimumLength = 5, 

@@ -89,6 +89,16 @@ namespace Blog.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult IsUsernameAvailable(string username)
+        {
+            if (_context.Users.Any(u => u.Username.ToLower().Equals(username.ToLower())))
+            {
+                return Json($"The username \"{username}\" is already in use");
+            }
+            return Json(true);
+        }
+
         private bool FloatingLabelsCompatibleBrowser()
         {
             string browserName = Request.Headers["User-Agent"].ToString().ToLower();
