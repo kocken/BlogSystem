@@ -68,6 +68,7 @@ namespace Blog.Controllers
                         if (_context.SaveChanges() > 0)
                         {
                             _logger.LogInformation($"User \"{user.Username}\" was registered");
+                            TempData["NewRegistration"] = true;
                             return RedirectToAction("Index", "Home");
                         }
                         else

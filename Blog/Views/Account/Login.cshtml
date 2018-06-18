@@ -6,6 +6,10 @@
 
 <form class="form-signin" action="login" method="post">
     <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p class="text-danger">@ViewBag.ErrorMessage</p>
+    }
     <div class="relative">
         <div class="form-label-group">
             @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Username", type = "text", id = "username", required = true, autofocus = true })
@@ -39,6 +43,7 @@
     <link rel="stylesheet" href="~/css/floating-labels.css" />
     <script src="~/js/floating-labels.js"></script>
 }
+<script src="~/js/login-icons-positioning.js"></script>
 
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
 <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
