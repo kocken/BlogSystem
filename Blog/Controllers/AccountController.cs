@@ -1,5 +1,6 @@
 ﻿using Data;
 using Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,29 @@ namespace Blog.Controllers
             if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
                 ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
             {
-                return RedirectToAction("Index", "Home");
+                if (_context.Users.Any(u => u.Username.ToLower().Equals(user.Username.ToLower())))
+                {
+                    if (_context.Users.Any(u => 
+                    u.Username.ToLower().Equals(user.Username.ToLower()) && 
+                    u.Password.ToLower().Equals(user.Password.ToLower())))
+                    {
+                        _logger.LogInformation($"User \"{user.Username}\" logged in");
+                        TempData["Message"] = "Successfully logged in";
+                        HttpContext.Session.SetString("Username", user.Username);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        _logger.LogError($"User failed to login to user \"{user.Username}\"");
+                        ModelState.AddModelError("Password", "Invalid account password");
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation
+                        ("User tried to login to account which doesn't exist \"" + user.Username + "\"");
+                    ModelState.AddModelError("Username", $"The account \"{user.Username}\" doesn't exist");
+                }
             }
             ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View(user);
@@ -69,11 +92,13 @@ namespace Blog.Controllers
                         {
                             _logger.LogInformation($"User \"{user.Username}\" was registered");
                             TempData["NewRegistration"] = true;
+                            HttpContext.Session.SetString("Username", user.Username);
                             return RedirectToAction("Index", "Home");
                         }
                         else
                         {
-                            _logger.LogError($"Saving after updating context with user \"{user}\" returned <= 0");
+                            _logger.LogError
+                                ($"Saving changes returned <= 0 after updating context with user \"{user.Username}\"");
                             ViewBag.ErrorMessage = "An issue occured, try again (Error code: 1)";
                         }
                     }
@@ -91,13 +116,17 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
+            TempData["Message"] = "Successfully logged out";
+            HttpContext.Session.Remove("Username");
             return RedirectToAction("Index", "Home");
         }
 
         [AcceptVerbs("Get", "Post")]
         public IActionResult IsUsernameAvailable(string username)
         {
-            if (_context.Users.Any(u => u.Username.ToLower().Equals(username.ToLower())))
+            string referer = HttpContext.Request.Headers["Referer"];
+            if (!referer.EndsWith("/login") && // avoids running check when logging on, only checks on register
+                _context.Users.Any(u => u.Username.ToLower().Equals(username.ToLower())))
             {
                 return Json($"The username \"{username}\" is already in use");
             }
