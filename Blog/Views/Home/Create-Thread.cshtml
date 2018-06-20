@@ -1,0 +1,52 @@
+﻿@model CreateThreadModel
+
+@{
+    ViewData["Title"] = "Create thread";
+}
+<h1>@ViewData["Title"]</h1>
+
+<form action="Create-Thread" method="post">
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <p class="text-danger">@ViewBag.ErrorMessage</p>
+    }
+    <div class="form-label-group">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", type = "text", id = "title", required = true, autofocus = true })
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        @Html.LabelFor(m => m.Message)
+        @Html.TextBoxFor(m => m.Message, new { @class = "form-control", type = "text", id = "message", required = true})
+        <span asp-validation-for="Message" class="text-danger"></span>
+    </div>
+    <div class="form-label-group">
+        @Html.LabelFor(m => m.Tags, "Tags")
+        @for (int i = 0; i < Model.Tags.Count; i++)
+        {
+            <br />
+            <input asp-for="@Model.Tags[i].Chosen" type="checkbox" />
+            <label asp-for="@Model.Tags[i].Id" style="font-weight: normal;">@Model.Tags[i].Name</label>
+            <input asp-for="@Model.Tags[i].Id" type="hidden" />
+            <input asp-for="@Model.Tags[i].Name" type="hidden" />
+        }
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Create thread</button><br />
+</form>
+
+<style>
+    form {
+        width: 50%;
+    }
+
+    form label {
+        font-weight: bold;
+    }
+
+    .form-label-group {
+        padding-bottom: 20px;
+    }
+</style>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>

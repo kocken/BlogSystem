@@ -54,7 +54,7 @@ input[type]:focus, textarea:focus {
 
     .thread h2 {
         font-weight: bold;
-        font-size: xx-large;
+        font-size: 34px;
     }
 
     .thread h3 {
