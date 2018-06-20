@@ -38,7 +38,7 @@ namespace Data
                 new Rank{ Name = Ranks.Moderator.ToString() },
                 new Rank{ Name = Ranks.Administrator.ToString() }
             };
-            foreach (Rank r in ranks)
+            foreach (Rank r in ranks.Reverse())
             {
                 context.Ranks.Add(r);
             }
@@ -57,16 +57,16 @@ namespace Data
                     Username = "Mikael2",
                     Password = "pass123",
                     Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Moderator.ToString())),
-                    JoinTime = DateTime.Now
+                    JoinTime = DateTime.Now + TimeSpan.FromSeconds(5)
                 },
                 new User{
                     Username = "Billy",
                     Password = "qwerty",
                     Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Member.ToString())),
-                    JoinTime = DateTime.Now
+                    JoinTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 }
             };
-            foreach (User u in users)
+            foreach (User u in users.Reverse())
             {
                 context.Users.Add(u);
             }
@@ -85,82 +85,26 @@ namespace Data
                     User = Array.Find(users, u => u.Username.Equals("Mikael")),
                     Title = "Second thread test",
                     Message = "Just a test",
-                    CreationTime = DateTime.Now
+                    CreationTime = DateTime.Now + TimeSpan.FromSeconds(30)
                 }
             };
-            foreach (Thread t in threads)
+            foreach (Thread t in threads.Reverse())
             {
                 context.Threads.Add(t);
             }
             context.SaveChanges();
 
 
-            Comment[] comments = new Comment[]
-            {
-                new Comment{
-                    User = Array.Find(users, u => u.Username.Equals("Billy")),
-                    Thread = threads[0],
-                    Message = "Cool!",
-                    CreationTime = DateTime.Now
-                },
-                new Comment{
-                    User = Array.Find(users, u => u.Username.Equals("Billy")),
-                    Thread = threads[0],
-                    Message = "Can I get mod?",
-                    CreationTime = DateTime.Now
-                }
-            };
-            foreach (Comment c in comments)
-            {
-                context.Comments.Add(c);
-            }
-            context.SaveChanges();
-
-
-            EvaluationValue[] evaluationValues = new EvaluationValue[]
-            {
-                new EvaluationValue{ Name = "Approved" },
-                new EvaluationValue{ Name = "Disapproved" }
-            };
-            foreach (EvaluationValue e in evaluationValues)
-            {
-                context.EvaluationValues.Add(e);
-            }
-            context.SaveChanges();
-
-
-            Evaluation[] evaluations = new Evaluation[]
-            {
-                new Evaluation{
-                    Comment = comments[0],
-                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
-                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael")),
-                    EvaluationTime = DateTime.Now
-                },
-                new Evaluation{
-                    Comment = comments[0],
-                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
-                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael2")),
-                    EvaluationTime = DateTime.Now
-                }
-            };
-            foreach (Evaluation e in evaluations)
-            {
-                context.Evaluations.Add(e);
-            }
-            context.SaveChanges();
-
-
             Tag[] tags = new Tag[]
-            {
-                new Tag{ Name = "Comedy" }, 
-                new Tag{ Name = "Information" }, 
+{
+                new Tag{ Name = "Comedy" },
+                new Tag{ Name = "Information" },
                 new Tag{ Name = "Political" },
                 new Tag{ Name = "Sponsored" },
                 new Tag{ Name = "Discussion" },
                 new Tag{ Name = "Announcement" }
-            };
-            foreach (Tag t in tags)
+};
+            foreach (Tag t in tags.Reverse())
             {
                 context.Tags.Add(t);
             }
@@ -178,9 +122,65 @@ namespace Data
                     Tag = Array.Find(tags, t => t.Name.Equals("Announcement"))
                 }
             };
-            foreach (ThreadTag t in threadTags)
+            foreach (ThreadTag t in threadTags.Reverse())
             {
                 context.ThreadTags.Add(t);
+            }
+            context.SaveChanges();
+
+
+            Comment[] comments = new Comment[]
+            {
+                new Comment{
+                    User = Array.Find(users, u => u.Username.Equals("Billy")),
+                    Thread = threads[0],
+                    Message = "Cool!",
+                    CreationTime = DateTime.Now + TimeSpan.FromSeconds(20)
+                },
+                new Comment{
+                    User = Array.Find(users, u => u.Username.Equals("Billy")),
+                    Thread = threads[0],
+                    Message = "Can I get mod?",
+                    CreationTime = DateTime.Now + TimeSpan.FromSeconds(40)
+                }
+            };
+            foreach (Comment c in comments.Reverse())
+            {
+                context.Comments.Add(c);
+            }
+            context.SaveChanges();
+
+
+            EvaluationValue[] evaluationValues = new EvaluationValue[]
+            {
+                new EvaluationValue{ Name = "Approved" },
+                new EvaluationValue{ Name = "Disapproved" }
+            };
+            foreach (EvaluationValue e in evaluationValues.Reverse())
+            {
+                context.EvaluationValues.Add(e);
+            }
+            context.SaveChanges();
+
+
+            Evaluation[] evaluations = new Evaluation[]
+            {
+                new Evaluation{
+                    Comment = comments[0],
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael")),
+                    EvaluationTime = DateTime.Now + TimeSpan.FromSeconds(40)
+                },
+                new Evaluation{
+                    Comment = comments[0],
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael2")),
+                    EvaluationTime = DateTime.Now + TimeSpan.FromSeconds(60)
+                }
+            };
+            foreach (Evaluation e in evaluations.Reverse())
+            {
+                context.Evaluations.Add(e);
             }
             context.SaveChanges();
         }

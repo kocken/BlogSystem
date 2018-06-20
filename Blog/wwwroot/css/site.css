@@ -34,11 +34,32 @@
     }
 }
 
-.navbar-brand {
-    font-size: xx-large;
+.navbar {
+    font-size: large;
 }
+
+    .navbar-brand {
+        font-size: xx-large;
+    }
 
 input[type]:focus, textarea:focus {
     box-shadow: 0 0 4px rgba(0, 150, 255, 1);
     border: 1px solid rgba(0, 150, 255, 1);
 }
+
+.thread {
+    padding: 10px;
+    border-radius: 5px;
+}
+
+    .thread h2 {
+        font-family: Impact, Charcoal, sans-serif;
+    }
+
+    .thread .creation {
+        color: grey;
+    }
+
+    .thread .message {
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }

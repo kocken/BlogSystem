@@ -40,7 +40,7 @@ namespace Blog
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromDays(7);
+                options.IdleTimeout = TimeSpan.FromDays(14);
             });
         }
 
