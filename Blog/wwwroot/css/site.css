@@ -53,7 +53,13 @@ input[type]:focus, textarea:focus {
 }
 
     .thread h2 {
-        font-family: Impact, Charcoal, sans-serif;
+        font-weight: bold;
+        font-size: xx-large;
+    }
+
+    .thread h3 {
+        font-weight: bold;
+        font-size: 22px;
     }
 
     .thread .creation {
@@ -62,4 +68,8 @@ input[type]:focus, textarea:focus {
 
     .thread .message {
         font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+
+    .thread .comment {
+        padding-left: 20px;
     }

@@ -45,13 +45,13 @@
     var item = Model.ToList()[i];
     <div class="thread">
         <h2>
-            @Html.DisplayFor(modelItem => item.Title)
+            @item.Title
         </h2>
         <p class="creation">
             Posted by
-            @Html.DisplayFor(modelItem => item.User.Username)
+            @item.User.Username
             at
-            @Html.DisplayFor(modelItem => item.CreationTime)
+            @item.CreationTime
             <br>
             Tags: 
             @if (item.ThreadTags.Count > 0)
@@ -69,9 +69,36 @@
             }
         </p>
         <p class="message">
-            @Html.DisplayFor(modelItem => item.Message)
+            @item.Message
         </p>
-        <a href="comments">@Html.DisplayFor(modelItem => item.Comments.Count) comments</a>
+        <h3>
+            Comments
+        </h3>
+        @if (item.Comments.Count > 0)
+        {
+            <hr align="left" width="40%">
+            for (int y = 0; y < item.Comments.Count; y++)
+            {
+                var comment = item.Comments[y];
+                <div class="comment">
+                    <p class="creation">
+                        Posted by
+                        @comment.User.Username
+                        at
+                        @comment.CreationTime
+                    </p>
+                    <p class="message">
+                        @comment.Message
+                    </p>
+                </div>
+                <hr align="left" width="40%">
+            }
+        }
+        else
+        {
+            <p>None yet</p>
+        }
+        <a href="createcomment">Post a new comment</a>
     </div>
     @if (i+1 != Model.ToList().Count) // not the last item
     {

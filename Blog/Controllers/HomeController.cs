@@ -26,8 +26,7 @@ namespace Blog.Controllers
                 .Include(thread => thread.ThreadTags)
                     .ThenInclude(threadTags => threadTags.Tag)
                 .Include(thread => thread.Comments)
-                    .ThenInclude(comments => comments.Evaluations)
-                        .ThenInclude(evaluations => evaluations.EvaluationValue)
+                    .ThenInclude(comments => comments.User)
                 .ToListAsync());
         }
 
