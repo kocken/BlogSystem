@@ -66,7 +66,9 @@
         {
             <p>None yet</p>
         }
-        <a href="createcomment">Post a new comment</a>
+        <p><a asp-action="CreateComment" asp-route-id="@item.Id">Post a new comment</a></p>
+        <a asp-action="EditThread" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
+        <a asp-action="RemoveThread" asp-route-id="@item.Id" class="btn btn-danger">Remove</a>
     </div>
     @if (i+1 != Model.ToList().Count) // not the last item
     {

@@ -103,6 +103,28 @@ namespace Blog.Controllers
             return View("Create-Thread", model);
         }
 
+        [Route("Create-Comment")]
+        public IActionResult CreateComment(int id)
+        {
+            CreateThreadModel model = new CreateThreadModel();
+            model.Tags = _context.Tags.ToList();
+            return View("Create-Comment", model);
+        }
+
+        [Route("Edit-Thread")]
+        public IActionResult EditThread(int id)
+        {
+            CreateThreadModel model = new CreateThreadModel();
+            model.Tags = _context.Tags.ToList();
+            return View("Edit-Thread", model);
+        }
+
+        [Route("Remove-Thread")]
+        public IActionResult RemoveThread(int id)
+        {
+            return RedirectToAction("Index");
+        }
+
         [Route("Admin-Panel")]
         public async Task<IActionResult> AdminPanel()
         {
