@@ -91,7 +91,7 @@ namespace Blog.Controllers
                         if (_context.SaveChanges() > 0)
                         {
                             _logger.LogInformation($"User \"{user.Username}\" was registered");
-                            TempData["NewRegistration"] = true;
+                            TempData["Message"] = "You successfully created an account! You are now logged in.";
                             HttpContext.Session.SetString("Username", user.Username);
                             return RedirectToAction("Index", "Home");
                         }

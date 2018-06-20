@@ -3,24 +3,8 @@
 @{
     ViewData["Title"] = "Home";
 }
+<h1>@ViewData["Title"]</h1>
 
-<div class="jumbotron">
-    <h1>Blog</h1>
-</div>
-
-@if (TempData["NewRegistration"] != null && TempData["NewRegistration"].Equals(true))
-{
-    <script src="~/js/vex.combined.min.js"></script>
-    <script>vex.defaultOptions.className = 'vex-theme-os'</script>
-    <link href="~/css/vex.css" rel="stylesheet" />
-    <link href="~/css/vex-theme-default.css" rel="stylesheet" />
-    <script>
-        vex.dialog.alert({
-            message: 'You successfully created an account! You are now logged in.',
-            className: 'vex-theme-default'
-        })
-    </script>
-}
 @if (TempData["Message"] != null)
 {
     <script src="~/js/vex.combined.min.js"></script>

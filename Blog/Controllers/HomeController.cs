@@ -30,6 +30,11 @@ namespace Blog.Controllers
                 .ToListAsync());
         }
 
+        public async Task<IActionResult> AdminPanel()
+        {
+            return View(await _context.Threads.Include(_ => _.User).ToListAsync());
+        }
+
         public async Task<IActionResult> Moderation()
         {
             return View(await _context.Threads.Include(_ => _.User).ToListAsync());
