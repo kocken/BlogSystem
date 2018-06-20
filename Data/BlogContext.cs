@@ -29,6 +29,9 @@ namespace Data
             modelBuilder.Entity<User>().ToTable("User").HasIndex(u => u.Username).IsUnique();
             modelBuilder.Entity<Thread>().ToTable("Thread");
             modelBuilder.Entity<Comment>().ToTable("Comment");
+            modelBuilder.Entity<Comment>().HasQueryFilter( // only show approved comments publicly
+                c => c.Evaluations.Count > 0 && 
+                c.Evaluations.All(e => e.EvaluationValue.Name.Equals("Approved")));
             modelBuilder.Entity<EvaluationValue>().ToTable("EvaluationValue");
             modelBuilder.Entity<Evaluation>().ToTable("Evaluation");
             modelBuilder.Entity<Tag>().ToTable("Tag");

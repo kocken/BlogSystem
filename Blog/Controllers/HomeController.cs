@@ -5,9 +5,6 @@ using Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using Domain;
 
 namespace Blog.Controllers
 {
@@ -24,14 +21,10 @@ namespace Blog.Controllers
 
         public async Task<IActionResult> Index()
         {
-            List<Thread> threads = _context.Threads
-                .Include(thread => thread.User)
-                .Include(thread => thread.Comments)
-                    .ThenInclude(comments => comments.Evaluations)
-                        .ThenInclude(evaluations => evaluations.EvaluationValue)
-                .ToList();
             return View(await _context.Threads
                 .Include(thread => thread.User)
+                .Include(thread => thread.ThreadTags)
+                    .ThenInclude(threadTags => threadTags.Tag)
                 .Include(thread => thread.Comments)
                     .ThenInclude(comments => comments.Evaluations)
                         .ThenInclude(evaluations => evaluations.EvaluationValue)

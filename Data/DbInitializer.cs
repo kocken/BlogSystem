@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 
@@ -18,7 +19,7 @@ namespace Data
                 context.Tags.RemoveRange(context.Tags.Where(t => t.Id == t.Id));
                 context.Evaluations.RemoveRange(context.Evaluations.Where(e => e.Id == e.Id));
                 context.EvaluationValues.RemoveRange(context.EvaluationValues.Where(e => e.Id == e.Id));
-                context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id));
+                context.Comments.RemoveRange(context.Comments.Where(c => c.Id == c.Id).IgnoreQueryFilters());
                 context.Threads.RemoveRange(context.Threads.Where(t => t.Id == t.Id));
                 context.Users.RemoveRange(context.Users.Where(u => u.Id == u.Id));
                 context.Ranks.RemoveRange(context.Ranks.Where(r => r.Id == r.Id));
@@ -96,14 +97,14 @@ namespace Data
 
 
             Tag[] tags = new Tag[]
-{
-                new Tag{ Name = "Comedy" },
-                new Tag{ Name = "Information" },
-                new Tag{ Name = "Political" },
-                new Tag{ Name = "Sponsored" },
-                new Tag{ Name = "Discussion" },
-                new Tag{ Name = "Announcement" }
-};
+            {
+                new Tag{ Name = Tags.Comedy.ToString() },
+                new Tag{ Name = Tags.Information.ToString() },
+                new Tag{ Name = Tags.Political.ToString() },
+                new Tag{ Name = Tags.Sponsored.ToString() },
+                new Tag{ Name = Tags.Discussion.ToString() },
+                new Tag{ Name = Tags.Announcement.ToString() }
+            };
             foreach (Tag t in tags.Reverse())
             {
                 context.Tags.Add(t);
@@ -115,11 +116,11 @@ namespace Data
             {
                 new ThreadTag{
                     Thread = threads[0],
-                    Tag = Array.Find(tags, t => t.Name.Equals("Discussion"))
+                    Tag = Array.Find(tags, t => t.Name.Equals(Tags.Discussion.ToString()))
                 },
                 new ThreadTag{
                     Thread = threads[0],
-                    Tag = Array.Find(tags, t => t.Name.Equals("Announcement"))
+                    Tag = Array.Find(tags, t => t.Name.Equals(Tags.Announcement.ToString()))
                 }
             };
             foreach (ThreadTag t in threadTags.Reverse())
@@ -153,8 +154,8 @@ namespace Data
 
             EvaluationValue[] evaluationValues = new EvaluationValue[]
             {
-                new EvaluationValue{ Name = "Approved" },
-                new EvaluationValue{ Name = "Disapproved" }
+                new EvaluationValue{ Name = EvaluationValues.Approved.ToString() },
+                new EvaluationValue{ Name = EvaluationValues.Disapproved.ToString() }
             };
             foreach (EvaluationValue e in evaluationValues.Reverse())
             {
@@ -167,13 +168,13 @@ namespace Data
             {
                 new Evaluation{
                     Comment = comments[0],
-                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals(EvaluationValues.Approved.ToString())),
                     EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael")),
                     EvaluationTime = DateTime.Now + TimeSpan.FromSeconds(40)
                 },
                 new Evaluation{
                     Comment = comments[0],
-                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals("Approved")),
+                    EvaluationValue = Array.Find(evaluationValues, e => e.Name.Equals(EvaluationValues.Approved.ToString())),
                     EvaluatedBy = Array.Find(users, u => u.Username.Equals("Mikael2")),
                     EvaluationTime = DateTime.Now + TimeSpan.FromSeconds(60)
                 }

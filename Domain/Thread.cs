@@ -8,6 +8,7 @@ namespace Domain
         public Thread()
         {
             Comments = new List<Comment>();
+            ThreadTags = new List<ThreadTag>();
         }
 
         [Key, Required]
@@ -17,5 +18,7 @@ namespace Domain
         public string Title { get; set; }
 
         public List<Comment> Comments { get; set; }
+
+        public List<ThreadTag> ThreadTags { get; set; }
     }
 }

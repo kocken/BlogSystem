@@ -2,6 +2,11 @@
 
 namespace Domain
 {
+    public enum Tags
+    {
+        Comedy, Information, Political, Sponsored, Discussion, Announcement
+    }
+
     public class Tag
     {
         [Key, Required]

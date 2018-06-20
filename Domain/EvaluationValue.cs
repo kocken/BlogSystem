@@ -2,6 +2,11 @@
 
 namespace Domain
 {
+    public enum EvaluationValues
+    {
+        Approved, Disapproved
+    }
+
     public class EvaluationValue
     {
         [Key, Required]

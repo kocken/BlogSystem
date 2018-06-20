@@ -52,6 +52,21 @@
             @Html.DisplayFor(modelItem => item.User.Username)
             at
             @Html.DisplayFor(modelItem => item.CreationTime)
+            <br>
+            Tags: 
+            @if (item.ThreadTags.Count > 0)
+            {
+                List<string> tagNames = new List<string>();
+                foreach (var tag in item.ThreadTags)
+                {
+                    tagNames.Add(tag.Tag.Name);
+                }
+                @string.Join(", ", tagNames.ToArray());
+            }
+            else
+            {
+                @:None
+            }
         </p>
         <p class="message">
             @Html.DisplayFor(modelItem => item.Message)
