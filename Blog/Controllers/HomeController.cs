@@ -9,6 +9,8 @@ using Domain;
 using System.Linq;
 using System;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Collections.Generic;
 
 namespace Blog.Controllers
 {
@@ -47,32 +49,58 @@ namespace Blog.Controllers
         [Route("Create-Thread")]
         public IActionResult CreateThread(CreateThreadModel model)
         {
-            Thread thread = new Thread();
-            thread.Title = model.Title;
-            thread.Message = model.Message;
-            thread.CreationTime = DateTime.Now;
-            if (HttpContext.Session.TryGetValue("Username", out byte[] value))
+            if (ModelState.GetFieldValidationState("Title") == ModelValidationState.Valid &&
+                ModelState.GetFieldValidationState("Message") == ModelValidationState.Valid)
             {
-                string username = Encoding.UTF8.GetString(value);
-                User user = _context.Users.Single(u => u.Username.Equals(username));
-                if (user != null)
+                if (HttpContext.Session.TryGetValue("Username", out byte[] value))
                 {
-                    thread.User = user;
-                    _context.Update(thread);
-                    foreach (Tag tag in model.Tags)
+                    Thread thread = new Thread { Title = model.Title, Message = model.Message };
+                    string username = Encoding.UTF8.GetString(value);
+                    User user = _context.Users.Single(u => u.Username.Equals(username));
+                    if (user != null)
                     {
-                        if (tag.Chosen)
+                        thread.User = user;
+                        thread.CreationTime = DateTime.Now;
+                        _context.Update(thread);
+                        foreach (Tag tag in model.Tags)
                         {
-                            ThreadTag threadTag = new ThreadTag();
-                            threadTag.Thread = thread;
-                            threadTag.Tag = tag;
-                            _context.Update(threadTag);
+                            if (tag.Chosen)
+                            {
+                                ThreadTag threadTag = new ThreadTag();
+                                threadTag.Thread = thread;
+                                threadTag.Tag = tag;
+                                _context.Update(threadTag);
+                            }
+                        }
+                        if (_context.SaveChanges() > 0)
+                        {
+                            _logger.LogInformation($"Thread \"{thread.Title}\" was created");
+                            TempData["Message"] = "Successfully created thread";
+                            return RedirectToAction("Index");
+                        }
+                        else
+                        {
+                            _logger.LogError
+                                ($"Saving changes returned <= 0 after updating context with thread \"{thread.Title}\"");
+                            ViewBag.ErrorMessage = "Error: The database didn't register your thread. Try again.";
                         }
                     }
-                    _context.SaveChanges();
+                    else
+                    {
+                        _logger.LogError
+                            ($"Logged in user \"{user.Username}\" tried to make a thread, " +
+                            $"but the account was not found in the database");
+                        ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation
+                        ("User tried to create thread without being logged in");
+                    ViewBag.ErrorMessage = "Error: You need to login to create a thread.";
                 }
             }
-            return RedirectToAction("Index");
+            return View("Create-Thread", model);
         }
 
         [Route("Admin-Panel")]

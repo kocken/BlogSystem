@@ -99,13 +99,13 @@ namespace Blog.Controllers
                         {
                             _logger.LogError
                                 ($"Saving changes returned <= 0 after updating context with user \"{user.Username}\"");
-                            ViewBag.ErrorMessage = "An issue occured, try again (Error code: 1)";
+                            ViewBag.ErrorMessage = "Error: The database didn't register your registration. Try again.";
                         }
                     }
                     else
                     {
                         _logger.LogError("Default rank \"Member\" failed to get grabbed from database context");
-                        ViewBag.ErrorMessage = "An issue occured, try again (Error code: 2)";
+                        ViewBag.ErrorMessage = "Error: The default rank was failed to get obtained. Try again.";
                     }
                 }
             }
@@ -128,7 +128,7 @@ namespace Blog.Controllers
             if (!referer.EndsWith("/login") && // avoids running check when logging on, only checks on register
                 _context.Users.Any(u => u.Username.ToLower().Equals(username.ToLower())))
             {
-                return Json($"The username \"{username}\" is already in use");
+                return Json($"The username \"{username}\" is already in use.");
             }
             return Json(true);
         }

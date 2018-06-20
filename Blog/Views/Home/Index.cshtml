@@ -26,14 +26,9 @@
 {
     var item = Model.ToList()[i];
     <div class="thread">
-        <h2>
-            @item.Title
-        </h2>
+        <h2>@item.Title</h2>
         <p class="creation">
-            Posted by
-            @item.User.Username
-            at
-            @item.CreationTime
+            Posted by @item.User.Username at @item.CreationTime
             <br>
             Tags: 
             @if (item.ThreadTags.Count > 0)
@@ -50,12 +45,8 @@
                 @:None
             }
         </p>
-        <p class="message">
-            @item.Message
-        </p>
-        <h3>
-            Comments
-        </h3>
+        <p class="message">@item.Message</p>
+        <h3>Comments</h3>
         @if (item.Comments.Count > 0)
         {
             <hr align="left" width="40%">
@@ -64,14 +55,9 @@
                 var comment = item.Comments[y];
                 <div class="comment">
                     <p class="creation">
-                        Posted by
-                        @comment.User.Username
-                        at
-                        @comment.CreationTime
+                        Posted by @comment.User.Username at @comment.CreationTime
                     </p>
-                    <p class="message">
-                        @comment.Message
-                    </p>
+                    <p class="message">@comment.Message</p>
                 </div>
                 <hr align="left" width="40%">
             }
