@@ -122,20 +122,13 @@ namespace Blog.Controllers
         [AcceptVerbs("Get", "Post")]
         public IActionResult IsUsernameAvailable(string username)
         {
-            string referer = HttpContext.Request.Headers["Referer"];
+            string referer = HttpContext.Request.Headers["Referer"].ToString().ToLower();
             if (!referer.EndsWith("/login") && // avoids running check when logging on, only checks on register
                 _context.Users.Any(u => u.Username.ToLower().Equals(username.ToLower())))
             {
                 return Json($"The username \"{username}\" is already in use.");
             }
             return Json(true);
-        }
-
-        private bool FloatingLabelsCompatibleBrowser()
-        {
-            string browserName = Request.Headers["User-Agent"].ToString().ToLower();
-            return !browserName.Contains("edge") &&
-                (browserName.Contains("chrome") || browserName.Contains("firefox") || browserName.Contains("safari"));
         }
     }
 }

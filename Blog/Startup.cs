@@ -34,9 +34,12 @@ namespace Blog
                 .UseLoggerFactory(_loggerFactory)
                 .UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Blog")));
 
-
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddMvc();
+            services.AddScoped<GlobalFilter>();
+            services.AddMvc().AddMvcOptions(options =>
+            {
+                options.Filters.AddService(typeof(GlobalFilter));
+            });
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
