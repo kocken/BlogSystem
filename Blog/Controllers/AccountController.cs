@@ -23,96 +23,88 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(User user)
         {
-            if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
-                ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
+            if (ModelState.GetFieldValidationState("Username") != ModelValidationState.Valid ||
+                ModelState.GetFieldValidationState("Password") != ModelValidationState.Valid)
             {
-                if (_context.Users.Any(u => u.Username.ToLower().Equals(user.Username.ToLower())))
-                {
-                    if (_context.Users.Any(u => 
-                    u.Username.ToLower().Equals(user.Username.ToLower()) && 
-                    u.Password.ToLower().Equals(user.Password.ToLower())))
-                    {
-                        HttpContext.Session.SetString("Username", user.Username);
-                        _logger.LogInformation($"User \"{user.Username}\" logged in");
-                        TempData["Message"] = "Successfully logged in";
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        _logger.LogInformation($"User failed to login to user \"{user.Username}\"");
-                        ModelState.AddModelError("Password", "Invalid account password");
-                    }
-                }
-                else
-                {
-                    _logger.LogInformation
-                        ("User tried to login to account which doesn't exist \"" + user.Username + "\"");
-                    ModelState.AddModelError("Username", $"The account \"{user.Username}\" doesn't exist");
-                }
+                _logger.LogInformation("User tried to login with invalid model values");
+                return View(user);
             }
-            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
-            return View(user);
+            if (!_context.Users.Any(u => u.Username.ToLower().Equals(user.Username.ToLower())))
+            {
+                _logger.LogInformation($"User tried to login to account which doesn't exist \"{user.Username}\"");
+                ModelState.AddModelError("Username", $"The account \"{user.Username}\" doesn't exist.");
+                return View(user);
+            }
+            if (_context.Users.Any(u => 
+                u.Username.ToLower().Equals(user.Username.ToLower()) && 
+                u.Password.ToLower().Equals(user.Password.ToLower())))
+            {
+                HttpContext.Session.SetString("Username", user.Username);
+                _logger.LogInformation($"User \"{user.Username}\" logged in");
+                TempData["Message"] = "Successfully logged in";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                _logger.LogInformation($"User failed to login to user \"{user.Username}\"");
+                ModelState.AddModelError("Password", "Invalid account password.");
+                return View(user);
+            }
         }
 
         [HttpGet]
         public IActionResult Register()
         {
-            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
             return View();
         }
 
         [HttpPost]
         public IActionResult Register(User user)
         {
-            if (ModelState.GetFieldValidationState("Username") == ModelValidationState.Valid &&
-                ModelState.GetFieldValidationState("Password") == ModelValidationState.Valid)
+            if (ModelState.GetFieldValidationState("Username") != ModelValidationState.Valid ||
+                ModelState.GetFieldValidationState("Password") != ModelValidationState.Valid)
             {
-                if (_context.Users.Any(u => u.Username.ToLower().Equals(user.Username.ToLower())))
-                {
-                    _logger.LogInformation
-                        ("User tried to register account with already existing username \"" + user.Username + "\"");
-                    ModelState.AddModelError("Username", $"The username \"{user.Username}\" is already in use");
-                }
-                else
-                {
-                    Rank defaultRank = _context.Ranks.Single(r => r.Name.Equals(Ranks.Member.ToString()));
-                    if (defaultRank != null)
-                    {
-                        user.Rank = defaultRank;
-                        user.JoinTime = DateTime.Now;
-                        _context.Add(user);
-                        if (_context.SaveChanges() > 0)
-                        {
-                            HttpContext.Session.SetString("Username", user.Username);
-                            _logger.LogInformation($"User \"{user.Username}\" was registered and logged into");
-                            TempData["Message"] = "You successfully created an account! You are now logged in.";
-                            return RedirectToAction("Index", "Home");
-                        }
-                        else
-                        {
-                            _logger.LogError
-                                ($"Saving changes returned <= 0 after adding user " +
-                                $"\"{user.Username}\" to context");
-                            ViewBag.ErrorMessage = "Error: The database didn't register your registration. Try again.";
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogError($"Default rank \"Member\" was failed to get obtained " +
-                            $"from database context during {user.Username}'s registration");
-                        ViewBag.ErrorMessage = "Error: The default rank was failed to get obtained. Try again.";
-                    }
-                }
+                _logger.LogInformation("User tried to register with invalid model values");
+                return View(user);
             }
-            ViewBag.ShowFloatingLabels = FloatingLabelsCompatibleBrowser();
-            return View(user);
+            if (_context.Users.Any(u => u.Username.ToLower().Equals(user.Username.ToLower())))
+            {
+                _logger.LogInformation("User tried to register account " +
+                    $"with the already existing username \"{user.Username}\"");
+                ModelState.AddModelError("Username", $"The username \"{user.Username}\" is already in use.");
+                return View(user);
+            }
+            Rank defaultRank = _context.Ranks.SingleOrDefault(r => r.Name.Equals(Ranks.Member.ToString()));
+            if (defaultRank == null)
+            {
+                _logger.LogError("Default rank \"Member\" was failed to get obtained " +
+                    $"from database context during {user.Username}'s registration");
+                ViewBag.ErrorMessage = "Error: The default rank was failed to get obtained. Try again.";
+                return View(user);
+            }
+            user.Rank = defaultRank;
+            user.JoinTime = DateTime.Now;
+            _context.Add(user);
+            if (_context.SaveChanges() > 0)
+            {
+                HttpContext.Session.SetString("Username", user.Username);
+                _logger.LogInformation($"User \"{user.Username}\" was registered and logged into");
+                TempData["Message"] = "You successfully created an account! You are now logged in.";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                _logger.LogError("Saving changes returned <= 0 after adding user " +
+                    $"\"{user.Username}\" to context");
+                ViewBag.ErrorMessage = "Error: The database didn't register your registration. Try again.";
+                return View(user);
+            }
         }
 
         [HttpGet]

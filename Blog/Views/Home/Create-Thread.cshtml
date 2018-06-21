@@ -1,7 +1,7 @@
-﻿@model CreateThreadModel
+﻿@model ThreadModel
 
 @{
-    ViewData["Title"] = "Create thread";
+    ViewData["Title"] = Model.Id == -1 ? "Create thread" : "Edit thread";
 }
 <h1>@ViewData["Title"]</h1>
 
@@ -17,7 +17,7 @@
     </div>
     <div class="form-label-group">
         @Html.LabelFor(m => m.Message)
-        @Html.TextBoxFor(m => m.Message, new { @class = "form-control", type = "text", id = "message", required = true})
+        @Html.TextBoxFor(m => m.Message, new { @class = "form-control", type = "text", id = "message", required = true })
         <span asp-validation-for="Message" class="text-danger"></span>
     </div>
     <div class="form-label-group">
@@ -31,6 +31,9 @@
             <input asp-for="@Model.Tags[i].Name" type="hidden" />
         }
     </div>
+    <input asp-for="@Model.Id" type="hidden" />
+    <input asp-for="@Model.UserId" type="hidden" />
+    <input asp-for="@Model.CreationTime" type="hidden" />
     <button class="btn btn-lg btn-primary btn-block" type="submit">Create thread</button><br />
 </form>
 
