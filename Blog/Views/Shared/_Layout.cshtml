@@ -32,42 +32,46 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="AdminPanel">Admin panel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Home" asp-action="Moderation">Moderation</a>
-                    </li>
+                    @if (ViewBag.RankLevel >= 2)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="AdminPanel">Admin panel</a>
+                        </li>
+                    }
+                    @if (ViewBag.RankLevel >= 1)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Moderation">Moderation</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav navbar-right">
-                    @{
-                        if (ViewBag.Username != null)
-                        {
-                            <li class="nav-item nav-link">
-                                <i class="fas fa-user"></i> @ViewBag.Username
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Logout">
-                                    <i class="fas fa-sign-out-alt"></i> Logout
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">
-                                    <i class="fas fa-sign-in-alt"></i> Login
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Register">
-                                    <i class="fas fa-user-plus"></i> Register
-                                </a>
-                            </li>
-                        }
+                    @if (ViewBag.Username != null)
+                    {
+                        <li class="nav-item nav-link">
+                            <i class="fas fa-user"></i> @ViewBag.Username
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
                     }
                 </ul>
             </div>

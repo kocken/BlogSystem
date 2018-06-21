@@ -19,7 +19,10 @@
     </script>
 }
 
-<a asp-action="CreateThread">Create new thread</a>
+@if (ViewBag.RankLevel >= 1)
+{
+    <a asp-action="CreateThread">Create new thread</a>
+}
 
 <hr>
 @for (int i = 0; i < Model.ToList().Count; i++)
@@ -30,7 +33,7 @@
         <p class="creation">
             Posted by @item.User.Username at @item.CreationTime
             <br>
-            Tags: 
+            Tags:
             @if (item.ThreadTags.Count > 0)
             {
                 List<string> tagNames = new List<string>();
@@ -66,11 +69,22 @@
         {
             <p>None yet</p>
         }
-        <p><a asp-action="PostComment" asp-route-id="@item.Id">Post a new comment</a></p>
-        <a asp-action="EditThread" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
-        <a asp-action="RemoveThread" asp-route-id="@item.Id" class="btn btn-danger">Remove</a>
+        @if (ViewBag.RankLevel >= 0)
+        {
+            <p><a asp-action="PostComment" asp-route-id="@item.Id">Post a new comment</a></p>
+        }
+        else
+        {
+            <p><a asp-controller="Account" asp-action="Login">Login to post a new comment</a></p>
+        }
+        @if (ViewBag.RankLevel >= 1 || ViewBag.Username != null && ViewBag.Username.Equals(item.User.Username))
+        {
+            <a asp-action="EditThread" asp-route-id="@item.Id" class="btn btn-info">Edit</a>
+            <a asp-action="RemoveThread" asp-route-id="@item.Id" class="btn btn-danger">Remove</a>
+        }
+
     </div>
-    @if (i+1 != Model.ToList().Count) // not the last item
+    @if (i + 1 != Model.ToList().Count) // not the last item
     {
         <hr>
     }
