@@ -283,7 +283,7 @@ namespace Blog.Controllers
             {
                 _logger.LogError($"Saving changes returned <= 0 after user \"{username}\" " +
                     $"removed context thread \"{thread.Id}\" with its' connected posts");
-                TempData["Message"] = "Error: The database didn't register your deletion. Try again.";
+                TempData["Message"] = "Error: The database did not register your deletion. Try again.";
             }
             return RedirectToAction("Index");
         }

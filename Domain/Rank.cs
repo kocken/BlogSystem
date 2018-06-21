@@ -4,7 +4,7 @@ namespace Domain
 {
     public enum Ranks
     {
-        Member, Moderator, Administrator
+        Member = 0, Moderator = 1, Administrator = 2
     }
 
     public class Rank

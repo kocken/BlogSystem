@@ -44,12 +44,10 @@
                 </ul>
                 <ul class="navbar-nav navbar-right">
                     @{
-                        @using Microsoft.AspNetCore.Http
-                        string username = Context.Session.GetString("Username");
-                        if (username != null)
+                        if (ViewBag.Username != null)
                         {
                             <li class="nav-item nav-link">
-                                <i class="fas fa-user"></i> @username
+                                <i class="fas fa-user"></i> @ViewBag.Username
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Account" asp-action="Logout">

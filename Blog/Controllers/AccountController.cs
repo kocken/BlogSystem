@@ -41,11 +41,12 @@ namespace Blog.Controllers
                 ModelState.AddModelError("Username", $"The account \"{user.Username}\" doesn't exist.");
                 return View(user);
             }
-            if (_context.Users.Any(u => 
-                u.Username.ToLower().Equals(user.Username.ToLower()) && 
-                u.Password.ToLower().Equals(user.Password.ToLower())))
+            User dbUser = _context.Users.SingleOrDefault(u =>
+                u.Username.ToLower().Equals(user.Username.ToLower()) &&
+                u.Password.ToLower().Equals(user.Password.ToLower()));
+            if (dbUser != null)
             {
-                HttpContext.Session.SetString("Username", user.Username);
+                HttpContext.Session.SetString("Username", dbUser.Username);
                 _logger.LogInformation($"User \"{user.Username}\" logged in");
                 TempData["Message"] = "Successfully logged in";
                 return RedirectToAction("Index", "Home");
