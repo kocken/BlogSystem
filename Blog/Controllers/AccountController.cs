@@ -87,7 +87,7 @@ namespace Blog.Controllers
                     {
                         user.Rank = defaultRank;
                         user.JoinTime = DateTime.Now;
-                        _context.Update(user);
+                        _context.Add(user);
                         if (_context.SaveChanges() > 0)
                         {
                             HttpContext.Session.SetString("Username", user.Username);
@@ -98,7 +98,8 @@ namespace Blog.Controllers
                         else
                         {
                             _logger.LogError
-                                ($"Saving changes returned <= 0 after updating context with user \"{user.Username}\"");
+                                ($"Saving changes returned <= 0 after adding user " +
+                                $"\"{user.Username}\" to context");
                             ViewBag.ErrorMessage = "Error: The database didn't register your registration. Try again.";
                         }
                     }

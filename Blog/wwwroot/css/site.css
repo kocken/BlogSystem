@@ -1,7 +1,14 @@
 ﻿body {
     padding-top: 85px;
     padding-bottom: 85px;
+    -ms-overflow-style: none; /* IE 10+ */
+    overflow: hidden; /* Firefox */
+    overflow-y: scroll;
 }
+
+    body::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+    }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */

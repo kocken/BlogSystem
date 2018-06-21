@@ -1,0 +1,11 @@
+﻿form {
+    width: 50%;
+}
+
+    form label {
+        font-weight: bold;
+    }
+
+.form-label-group {
+    padding-bottom: 20px;
+}

@@ -24,6 +24,7 @@ namespace Blog.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Threads
@@ -39,8 +40,7 @@ namespace Blog.Controllers
         [Route("Create-Thread")]
         public IActionResult CreateThread()
         {
-            CreateThreadModel model = new CreateThreadModel();
-            model.Tags = _context.Tags.ToList();
+            CreateThreadModel model = new CreateThreadModel { Tags = _context.Tags.ToList() };
             return View("Create-Thread", model);
         }
 
@@ -53,21 +53,22 @@ namespace Blog.Controllers
             {
                 if (Util.GetUsername(HttpContext.Session, out string username))
                 {
-                    Thread thread = new Thread { Title = model.Title, Message = model.Message };
                     User user = _context.Users.Single(u => u.Username.Equals(username));
                     if (user != null)
                     {
-                        thread.User = user;
-                        thread.CreationTime = DateTime.Now;
-                        _context.Update(thread);
+                        Thread thread = new Thread {
+                            Title = model.Title,
+                            Message = model.Message,
+                            User = user,
+                            CreationTime = DateTime.Now
+                        };
+                        _context.Add(thread);
                         foreach (Tag tag in model.Tags)
                         {
                             if (tag.Chosen)
                             {
-                                ThreadTag threadTag = new ThreadTag();
-                                threadTag.Thread = thread;
-                                threadTag.Tag = tag;
-                                _context.Update(threadTag);
+                                ThreadTag threadTag = new ThreadTag { ThreadId = thread.Id, TagId = tag.Id };
+                                _context.Add(threadTag);
                             }
                         }
                         if (_context.SaveChanges() > 0)
@@ -79,7 +80,8 @@ namespace Blog.Controllers
                         else
                         {
                             _logger.LogError
-                                ($"Saving changes returned <= 0 after updating context with thread \"{thread.Id}\" made by \"{user.Username}\"");
+                                ($"Saving changes returned <= 0 after adding " +
+                                $"thread \"{thread.Id}\" made by \"{user.Username}\" to context");
                             ViewBag.ErrorMessage = "Error: The database didn't register your thread. Try again.";
                         }
                     }
@@ -101,22 +103,79 @@ namespace Blog.Controllers
             return View("Create-Thread", model);
         }
 
-        [Route("Create-Comment")]
-        public IActionResult CreateComment(int id)
+        [HttpGet]
+        [Route("Post-Comment")]
+        public IActionResult PostComment(int id)
         {
-            CreateThreadModel model = new CreateThreadModel();
-            model.Tags = _context.Tags.ToList();
-            return View("Create-Comment", model);
+            Comment comment = new Comment { ThreadId = id };
+            return View("Post-Comment", comment);
         }
 
+        [HttpPost]
+        [Route("Post-Comment")]
+        public IActionResult PostComment(Comment comment)
+        {
+            if (ModelState.GetFieldValidationState("Message") == ModelValidationState.Valid)
+            {
+                if (Util.GetUsername(HttpContext.Session, out string username))
+                {
+                    User user = _context.Users.Single(u => u.Username.Equals(username));
+                    if (user != null)
+                    {
+                        if (_context.Threads.Any(t => t.Id == comment.ThreadId))
+                        {
+                            comment.User = user;
+                            comment.CreationTime = DateTime.Now;
+                            _context.Add(comment);
+                            if (_context.SaveChanges() > 0)
+                            {
+                                _logger.LogInformation($"Comment \"{comment.Id}\" was created by \"{user.Username}\"");
+                                TempData["Message"] = "Successfully created comment";
+                                return RedirectToAction("Index");
+                            }
+                            else
+                            {
+                                _logger.LogError
+                                    ($"Saving changes returned <= 0 after adding " +
+                                    $"comment \"{comment.Id}\" made by \"{user.Username}\" to context");
+                                ViewBag.ErrorMessage = "Error: The database didn't register your comment. Try again.";
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogError
+                                ($"User \"{user.Username}\" tried to make a comment, " +
+                                $"but the thread \"{comment.ThreadId}\" was not found in the database");
+                            ViewBag.ErrorMessage = "Error: The thread was not found in the database. Try again.";
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError
+                            ($"Logged in user \"{user.Username}\" tried to make a thread, " +
+                            $"but the account was not found in the database");
+                        ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
+                    }
+                }
+                else
+                {
+                    _logger.LogInformation
+                        ("User tried to create thread without being logged in");
+                    ViewBag.ErrorMessage = "Error: You need to login to create a thread.";
+                }
+            }
+            return View("Post-Comment", comment);
+        }
+
+        [HttpGet]
         [Route("Edit-Thread")]
         public IActionResult EditThread(int id)
         {
-            CreateThreadModel model = new CreateThreadModel();
-            model.Tags = _context.Tags.ToList();
+            CreateThreadModel model = new CreateThreadModel { Tags = _context.Tags.ToList() };
             return View("Edit-Thread", model);
         }
 
+        [HttpGet]
         [Route("Remove-Thread")]
         public IActionResult RemoveThread(int id)
         {
@@ -155,22 +214,26 @@ namespace Blog.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         [Route("Admin-Panel")]
         public async Task<IActionResult> AdminPanel()
         {
             return View("Admin-Panel", await _context.Threads.Include(_ => _.User).ToListAsync());
         }
 
+        [HttpGet]
         public async Task<IActionResult> Moderation()
         {
             return View(await _context.Threads.Include(_ => _.User).ToListAsync());
         }
 
+        [HttpGet]
         public IActionResult About()
         {
             return View();
         }
 
+        [HttpGet]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
