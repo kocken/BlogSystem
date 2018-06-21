@@ -62,7 +62,7 @@ namespace Blog.Controllers
             User user = _context.Users.SingleOrDefault(u => u.Username.Equals(username));
             if (user == null)
             {
-                _logger.LogError($"Logged in user \"{user.Username}\" tried to make a thread, " +
+                _logger.LogError($"Logged in user \"{username}\" tried to make a thread, " +
                     "but the account was not found in the database");
                 ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
                 return View("Create-Thread", model);
@@ -201,7 +201,7 @@ namespace Blog.Controllers
         [Route("Post-Comment")]
         public IActionResult PostComment(Comment comment)
         {
-            if (Util.GetUsername(HttpContext.Session, out string username))
+            if (!Util.GetUsername(HttpContext.Session, out string username))
             {
                 _logger.LogInformation("User tried to create thread without being logged in");
                 ViewBag.ErrorMessage = "Error: You need to login to create a thread.";
@@ -215,7 +215,7 @@ namespace Blog.Controllers
             User user = _context.Users.SingleOrDefault(u => u.Username.Equals(username));
             if (user == null)
             {
-                _logger.LogError($"Logged in user \"{user.Username}\" tried to make a thread, " +
+                _logger.LogError($"Logged in user \"{username}\" tried to make a thread, " +
                     "but the account was not found in the database");
                 ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
                 return View("Post-Comment", comment);
