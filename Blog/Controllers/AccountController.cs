@@ -39,14 +39,14 @@ namespace Blog.Controllers
                     u.Username.ToLower().Equals(user.Username.ToLower()) && 
                     u.Password.ToLower().Equals(user.Password.ToLower())))
                     {
+                        HttpContext.Session.SetString("Username", user.Username);
                         _logger.LogInformation($"User \"{user.Username}\" logged in");
                         TempData["Message"] = "Successfully logged in";
-                        HttpContext.Session.SetString("Username", user.Username);
                         return RedirectToAction("Index", "Home");
                     }
                     else
                     {
-                        _logger.LogError($"User failed to login to user \"{user.Username}\"");
+                        _logger.LogInformation($"User failed to login to user \"{user.Username}\"");
                         ModelState.AddModelError("Password", "Invalid account password");
                     }
                 }
@@ -90,9 +90,9 @@ namespace Blog.Controllers
                         _context.Update(user);
                         if (_context.SaveChanges() > 0)
                         {
-                            _logger.LogInformation($"User \"{user.Username}\" was registered");
-                            TempData["Message"] = "You successfully created an account! You are now logged in.";
                             HttpContext.Session.SetString("Username", user.Username);
+                            _logger.LogInformation($"User \"{user.Username}\" was registered and logged into");
+                            TempData["Message"] = "You successfully created an account! You are now logged in.";
                             return RedirectToAction("Index", "Home");
                         }
                         else
@@ -104,7 +104,8 @@ namespace Blog.Controllers
                     }
                     else
                     {
-                        _logger.LogError("Default rank \"Member\" failed to get grabbed from database context");
+                        _logger.LogError($"Default rank \"Member\" was failed to get obtained " +
+                            $"from database context during {user.Username}'s registration");
                         ViewBag.ErrorMessage = "Error: The default rank was failed to get obtained. Try again.";
                     }
                 }
@@ -116,8 +117,12 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            TempData["Message"] = "Successfully logged out";
-            HttpContext.Session.Remove("Username");
+            if (Util.GetUsername(HttpContext.Session, out string username))
+            {
+                HttpContext.Session.Remove("Username");
+                _logger.LogInformation($"User \"{username}\" logged out");
+                TempData["Message"] = "Successfully logged out";
+            }
             return RedirectToAction("Index", "Home");
         }
 

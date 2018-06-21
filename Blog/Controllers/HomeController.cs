@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Domain;
 using System.Linq;
 using System;
-using System.Text;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 
@@ -52,10 +51,9 @@ namespace Blog.Controllers
             if (ModelState.GetFieldValidationState("Title") == ModelValidationState.Valid &&
                 ModelState.GetFieldValidationState("Message") == ModelValidationState.Valid)
             {
-                if (HttpContext.Session.TryGetValue("Username", out byte[] value))
+                if (Util.GetUsername(HttpContext.Session, out string username))
                 {
                     Thread thread = new Thread { Title = model.Title, Message = model.Message };
-                    string username = Encoding.UTF8.GetString(value);
                     User user = _context.Users.Single(u => u.Username.Equals(username));
                     if (user != null)
                     {
@@ -74,14 +72,14 @@ namespace Blog.Controllers
                         }
                         if (_context.SaveChanges() > 0)
                         {
-                            _logger.LogInformation($"Thread \"{thread.Title}\" was created");
+                            _logger.LogInformation($"Thread \"{thread.Id}\" was created by \"{user.Username}\"");
                             TempData["Message"] = "Successfully created thread";
                             return RedirectToAction("Index");
                         }
                         else
                         {
                             _logger.LogError
-                                ($"Saving changes returned <= 0 after updating context with thread \"{thread.Title}\"");
+                                ($"Saving changes returned <= 0 after updating context with thread \"{thread.Id}\" made by \"{user.Username}\"");
                             ViewBag.ErrorMessage = "Error: The database didn't register your thread. Try again.";
                         }
                     }
@@ -122,6 +120,38 @@ namespace Blog.Controllers
         [Route("Remove-Thread")]
         public IActionResult RemoveThread(int id)
         {
+            Thread thread = _context.Threads.Single(t => t.Id == id);
+            Util.GetUsername(HttpContext.Session, out string username);
+            if (thread != null)
+            {
+                _context.RemoveRange(_context.ThreadTags.Where(tt => tt.ThreadId == id));
+                List<Comment> comments = _context.Comments.Where(c => c.ThreadId == id).IgnoreQueryFilters().ToList();
+                foreach (Comment comment in comments)
+                {
+                    _context.RemoveRange(_context.Evaluations.Where(e => e.CommentId == comment.Id));
+                    _context.Remove(comment);
+                }
+                _context.Remove(thread);
+                if (_context.SaveChanges() > 0)
+                {
+                    _logger.LogInformation
+                        ($"User \"{username}\" removed the thread \"{id}\" with its' connected posts");
+                    TempData["Message"] = "Successfully removed thread";
+                }
+                else
+                {
+                    _logger.LogError
+                        ($"Saving changes returned <= 0 after user \"{username}\" " +
+                        $"removed context thread \"{thread.Id}\" with its' connected posts");
+                    TempData["Message"] = "Error: The database didn't register your deletion. Try again.";
+                }
+            }
+            else
+            {
+                _logger.LogInformation
+                    ($"User \"{username}\" tried to remove thread \"{id}\" that wasn't found in the database (already deleted?)");
+                TempData["Message"] = "Error: The thread was not found in the database";
+            }
             return RedirectToAction("Index");
         }
 

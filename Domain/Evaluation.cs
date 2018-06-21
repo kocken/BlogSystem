@@ -9,6 +9,9 @@ namespace Domain
         public int Id { get; set; }
 
         [Required]
+        public int CommentId { get; set; }
+
+        [Required]
         public Comment Comment { get; set; }
 
         [Required]

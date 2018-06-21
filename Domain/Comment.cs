@@ -14,6 +14,9 @@ namespace Domain
         public int Id { get; set; }
 
         [Required]
+        public int ThreadId { get; set; }
+
+        [Required]
         public Thread Thread { get; set; }
 
         public List<Evaluation> Evaluations { get; set; }
