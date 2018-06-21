@@ -23,12 +23,24 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (ViewBag.Username != null)
+            {
+                _logger.LogInformation($"User {ViewBag.Username} tried to login while already being logged in");
+                TempData["Message"] = "You are already logged in";
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(User user)
         {
+            if (ViewBag.Username != null)
+            {
+                _logger.LogInformation($"User {ViewBag.Username} tried to login while already being logged in");
+                TempData["Message"] = "You are already logged in";
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.GetFieldValidationState("Username") != ModelValidationState.Valid ||
                 ModelState.GetFieldValidationState("Password") != ModelValidationState.Valid)
             {
@@ -47,6 +59,7 @@ namespace Blog.Controllers
             if (dbUser != null)
             {
                 HttpContext.Session.SetString("Username", dbUser.Username);
+                HttpContext.Session.SetInt32("UserId", dbUser.Id);
                 _logger.LogInformation($"User \"{user.Username}\" logged in");
                 TempData["Message"] = "Successfully logged in";
                 return RedirectToAction("Index", "Home");
@@ -62,12 +75,26 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Register()
         {
+            if (ViewBag.Username != null)
+            {
+                _logger.LogInformation($"User {ViewBag.Username} tried to register a new account" +
+                    " while already being logged in");
+                TempData["Message"] = "You are already logged in";
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
         [HttpPost]
         public IActionResult Register(User user)
         {
+            if (ViewBag.Username != null)
+            {
+                _logger.LogInformation($"User {ViewBag.Username} tried to register a new account" +
+                    " while already being logged in");
+                TempData["Message"] = "You are already logged in";
+                return RedirectToAction("Index", "Home");
+            }
             if (ModelState.GetFieldValidationState("Username") != ModelValidationState.Valid ||
                 ModelState.GetFieldValidationState("Password") != ModelValidationState.Valid)
             {
@@ -95,6 +122,7 @@ namespace Blog.Controllers
             if (_context.SaveChanges() > 0)
             {
                 HttpContext.Session.SetString("Username", user.Username);
+                HttpContext.Session.SetInt32("UserId", user.Id);
                 _logger.LogInformation($"User \"{user.Username}\" was registered and logged into");
                 TempData["Message"] = "You successfully created an account! You are now logged in.";
                 return RedirectToAction("Index", "Home");
@@ -111,11 +139,16 @@ namespace Blog.Controllers
         [HttpGet]
         public IActionResult Logout()
         {
-            if (Util.GetUsername(HttpContext.Session, out string username))
+            HttpContext.Session.Remove("Username");
+            HttpContext.Session.Remove("UserId");
+            if (ViewBag.Username != null)
             {
-                HttpContext.Session.Remove("Username");
-                _logger.LogInformation($"User \"{username}\" logged out");
+                _logger.LogInformation($"User \"{ViewBag.Username}\" logged out");
                 TempData["Message"] = "Successfully logged out";
+            }
+            else
+            {
+                _logger.LogInformation("User tried to logout without being logged in");
             }
             return RedirectToAction("Index", "Home");
         }

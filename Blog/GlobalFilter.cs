@@ -33,8 +33,12 @@ namespace Blog
             }
 
             string username = context.HttpContext.Session.GetString("Username");
+            int? userId = context.HttpContext.Session.GetInt32("UserId");
             controller.ViewBag.Username = username;
-            controller.ViewBag.RankLevel = GetRankLevel(context, controller, username);
+            controller.ViewBag.UserId = userId;
+            GetAccountInfo(context, controller, username, out User user, out int rankLevel);
+            controller.ViewBag.User = user;
+            controller.ViewBag.RankLevel = rankLevel;
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
@@ -42,13 +46,24 @@ namespace Blog
             //code here runs after the action method executes
         }
 
-        private int GetRankLevel(ActionExecutingContext context, Controller controller, string username)
+        private void GetAccountInfo(ActionExecutingContext context, Controller controller, string username,
+            out User user, out int rankLevel)
         {
-            if (username == null) return -1;
-            User user = _context.Users
+            if (username == null)
+            {
+                rankLevel = -1;
+                user = null;
+                return;
+            }
+            user = _context.Users
                 .Include(u => u.Rank)
                 .SingleOrDefault(u => u.Username.Equals(username));
-            if (user == null)
+            if (user != null && Enum.IsDefined(typeof(Ranks), user.Rank.Name))
+            {
+                rankLevel = (int)Enum.Parse(typeof(Ranks), user.Rank.Name);
+                return;
+            }
+            else if (user == null)
             {
                 context.HttpContext.Session.Remove("Username");
                 _logger.LogError($"Logged in user \"{username}\" was not found in the database");
@@ -58,13 +73,8 @@ namespace Blog
                     new RouteValueDictionary(new {controller = "Home", action = "Index"})
                 );
                 context.Result.ExecuteResultAsync(controller.ControllerContext);
-                return -1;
             }
-            if (Enum.IsDefined(typeof(Ranks), user.Rank.Name))
-            {
-                return (int) Enum.Parse(typeof(Ranks), user.Rank.Name);
-            }
-            return -1;
+            rankLevel = -1;
         }
 
         private bool FloatingLabelsCompatibleBrowser(HttpContext httpContext)

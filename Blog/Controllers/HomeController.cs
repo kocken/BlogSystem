@@ -40,6 +40,19 @@ namespace Blog.Controllers
         [Route("Create-Thread")]
         public IActionResult CreateThread()
         {
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to create thread without being logged in");
+                TempData["Message"] = "You need to login to create a thread";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 1)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "create thread without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to create a thread";
+                return RedirectToAction("Index");
+            }
             return View("Create-Thread", new ThreadModel { Tags = _context.Tags.ToList() });
         }
 
@@ -47,22 +60,38 @@ namespace Blog.Controllers
         [Route("Create-Thread")]
         public IActionResult CreateThread(ThreadModel model)
         {
-            if (!Util.GetUsername(HttpContext.Session, out string username))
+            if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to create thread without being logged in");
-                ViewBag.ErrorMessage = "Error: You need to login to create a thread.";
-                return View("Create-Thread", model);
+                TempData["Message"] = "You need to login to create a thread";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 1 && 
+                !(model.Id >= 0 && model.UserId == ViewBag.UserId)) // if editing thread and not the author
+            {
+                if (model.Id == -1)
+                {
+                    _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                        "create thread without being high enough rank");
+                }
+                else
+                {
+                    _logger.LogInformation($"User \"{ViewBag.Username}\" tried to edit the thread \"{model.Id}\" " +
+                        "without being the author nor having high enough rank");
+                }
+                TempData["Message"] = "You are not ranked high enough " + (model.Id == -1 ? 
+                    "to create a" : "nor the author of the thread, you are not able to edit the") + " thread";
+                return RedirectToAction("Index");
             }
             if (ModelState.GetFieldValidationState("Title") != ModelValidationState.Valid ||
                 ModelState.GetFieldValidationState("Message") != ModelValidationState.Valid)
             {
-                _logger.LogInformation($"User \"{username}\" tried to create thread with invalid model values");
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to create thread with invalid model values");
                 return View("Create-Thread", model);
             }
-            User user = _context.Users.SingleOrDefault(u => u.Username.Equals(username));
-            if (user == null)
+            if (ViewBag.User == null)
             {
-                _logger.LogError($"Logged in user \"{username}\" tried to make a thread, " +
+                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to make a thread, " +
                     "but the account was not found in the database");
                 ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
                 return View("Create-Thread", model);
@@ -73,7 +102,7 @@ namespace Blog.Controllers
             };
             if (model.Id == -1) // if creating new thread
             {
-                thread.User = user;
+                thread.User = ViewBag.User;
                 thread.CreationTime = DateTime.Now;
                 _context.Add(thread);
 
@@ -90,7 +119,7 @@ namespace Blog.Controllers
                 if (!_context.Threads.Any(t => t.Id == model.Id))
                 {
                     _logger.LogError("Failed to obtain original thread " +
-                        $"when user \"{user.Username}\" tried to edit thread \"{thread.Id}\"");
+                        $"when user \"{ViewBag.Username}\" tried to edit thread \"{thread.Id}\"");
                     TempData["Message"] = "Error: Failed to obtain original thread. Try again.";
                     return RedirectToAction("Index");
                 }
@@ -98,7 +127,7 @@ namespace Blog.Controllers
                 {
                     _logger.LogError("Failed to obtain original thread " +
                         $"UserId \"{model.UserId}\" and/or CreationTime \"{model.CreationTime}\" " +
-                        $"when user \"{user.Username}\" tried to edit thread \"{thread.Id}\"");
+                        $"when user \"{ViewBag.Username}\" tried to edit thread \"{thread.Id}\"");
                     TempData["Message"] = "Error: Failed to obtain all thread values. Try again.";
                     return RedirectToAction("Index");
                 }
@@ -134,7 +163,7 @@ namespace Blog.Controllers
             if (_context.SaveChanges() > 0)
             {
                 _logger.LogInformation($"Thread \"{thread.Id}\" was " + 
-                    (model.Id == -1 ? "created" : "edited") + $" by \"{username}\"");
+                    (model.Id == -1 ? "created" : "edited") + $" by \"{ViewBag.Username}\"");
                 TempData["Message"] = "Successfully " + (model.Id == -1 ? "created" : "edited") + " thread";
                 return RedirectToAction("Index");
             }
@@ -142,7 +171,7 @@ namespace Blog.Controllers
             {
                 _logger.LogError("Saving changes returned <= 0 after " + (model.Id == -1 ? 
                     "adding" : "updating") + $" thread \"{thread.Id}\" " +
-                    (model.Id == -1 ? "created" : "edited") + $" by \"{user.Username}\" to context");
+                    (model.Id == -1 ? "created" : "edited") + $" by \"{ViewBag.Username}\" to context");
                 ViewBag.ErrorMessage = "Error: The database didn't register your " + 
                     (model.Id == -1 ? "thread" : "edit") + ". Try again.";
                 return View("Create-Thread", model);
@@ -153,13 +182,27 @@ namespace Blog.Controllers
         [Route("Edit-Thread")]
         public IActionResult EditThread(int id)
         {
-            Util.GetUsername(HttpContext.Session, out string username);
-            Thread thread = _context.Threads.SingleOrDefault(t => t.Id == id);
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to edit a thread without being logged in");
+                TempData["Message"] = "You need to login to be able to edit threads";
+                return RedirectToAction("Login", "Account");
+            }
+            Thread thread = _context.Threads
+                .Include(t => t.User)
+                .SingleOrDefault(t => t.Id == id);
             if (thread == null)
             {
-                _logger.LogInformation($"Thread \"{id}\" that was attempted to get edited " +
-                    $"by \"{username}\" was not found in the database");
+                _logger.LogError($"Thread \"{id}\" that was attempted to get edited " +
+                    $"by \"{ViewBag.Username}\" was not found in the database");
                 TempData["Message"] = "Error: The thread you tried to edit was not found in the database. Try again.";
+                return RedirectToAction("Index");
+            }
+            if (ViewBag.RankLevel < 1 && !thread.User.Username.Equals(ViewBag.Username))
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to edit the thread \"{id}\" " +
+                    "without being the author nor having high enough rank");
+                TempData["Message"] = "You are not the author nor ranked high enough to edit the thread";
                 return RedirectToAction("Index");
             }
             List<Tag> tags = _context.Tags.ToList();
@@ -194,6 +237,19 @@ namespace Blog.Controllers
         [Route("Post-Comment")]
         public IActionResult PostComment(int id)
         {
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to post a comment without being logged in");
+                TempData["Message"] = "You need to login to post a comment";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 0)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "post a comment without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to post a comment";
+                return RedirectToAction("Index");
+            }
             return View("Post-Comment", new Comment { ThreadId = id });
         }
 
@@ -201,45 +257,51 @@ namespace Blog.Controllers
         [Route("Post-Comment")]
         public IActionResult PostComment(Comment comment)
         {
-            if (!Util.GetUsername(HttpContext.Session, out string username))
+            if (ViewBag.Username == null)
             {
-                _logger.LogInformation("User tried to create thread without being logged in");
-                ViewBag.ErrorMessage = "Error: You need to login to create a thread.";
-                return View("Post-Comment", comment);
+                _logger.LogInformation("User tried to post a comment without being logged in");
+                TempData["Message"] = "You need to login to post a comment";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 0)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "post a comment without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to post a comment";
+                return RedirectToAction("Index");
             }
             if (ModelState.GetFieldValidationState("Message") != ModelValidationState.Valid)
             {
-                _logger.LogInformation($"User \"{username}\" tried to create comment with invalid model value");
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to post comment with invalid model value");
                 return View("Post-Comment", comment);
             }
-            User user = _context.Users.SingleOrDefault(u => u.Username.Equals(username));
-            if (user == null)
+            if (ViewBag.User == null)
             {
-                _logger.LogError($"Logged in user \"{username}\" tried to make a thread, " +
+                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to make a thread, " +
                     "but the account was not found in the database");
                 ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
                 return View("Post-Comment", comment);
             }
             if (!_context.Threads.Any(t => t.Id == comment.ThreadId))
             {
-                _logger.LogError($"User \"{user.Username}\" tried to make a comment, " +
+                _logger.LogError($"User \"{ViewBag.Username}\" tried to make a comment, " +
                     $"but the thread \"{comment.ThreadId}\" was not found in the database");
                 ViewBag.ErrorMessage = "Error: The thread was not found in the database. Try again.";
                 return View("Post-Comment", comment);
             }
-            comment.User = user;
+            comment.User = ViewBag.User;
             comment.CreationTime = DateTime.Now;
             _context.Add(comment);
             if (_context.SaveChanges() > 0)
             {
-                _logger.LogInformation($"Comment \"{comment.Id}\" was created by \"{user.Username}\"");
+                _logger.LogInformation($"Comment \"{comment.Id}\" was created by \"{ViewBag.Username}\"");
                 TempData["Message"] = "Successfully created comment";
                 return RedirectToAction("Index");
             }
             else
             {
                 _logger.LogError("Saving changes returned <= 0 after adding " +
-                    $"comment \"{comment.Id}\" made by \"{user.Username}\" to context");
+                    $"comment \"{comment.Id}\" made by \"{ViewBag.Username}\" to context");
                 ViewBag.ErrorMessage = "Error: The database didn't register your comment. Try again.";
                 return View("Post-Comment", comment);
             }
@@ -256,13 +318,26 @@ namespace Blog.Controllers
         /// </summary>
         public IActionResult RemoveThread(int id)
         {
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to remove a thread without being logged in");
+                TempData["Message"] = "You need to login to remove a thread";
+                return RedirectToAction("Login", "Account");
+            }
             Thread thread = _context.Threads.SingleOrDefault(t => t.Id == id);
-            Util.GetUsername(HttpContext.Session, out string username);
             if (thread == null)
             {
-                _logger.LogInformation($"User \"{username}\" tried to remove thread " +
+                _logger.LogError($"User \"{ViewBag.Username}\" tried to remove thread " +
                     $"\"{id}\" that wasn't found in the database (already deleted?)");
-                TempData["Message"] = "Error: The thread was not found in the database";
+                TempData["Message"] = "Error: The thread was not found in the database. Try again.";
+                return RedirectToAction("Index");
+            }
+            if (ViewBag.RankLevel < 1 && thread.UserId != ViewBag.UserId)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to remove the thread \"{id}\" " +
+                    "without being the author nor having high enough rank");
+                TempData["Message"] = "You are not ranked high enough nor " +
+                    "the author of the thread, you are not able to remove the thread";
                 return RedirectToAction("Index");
             }
             _context.RemoveRange(_context.ThreadTags.Where(tt => tt.ThreadId == id));
@@ -276,12 +351,12 @@ namespace Blog.Controllers
             if (_context.SaveChanges() > 0)
             {
                 _logger.LogInformation
-                    ($"User \"{username}\" removed the thread \"{id}\" with its' connected posts");
+                    ($"User \"{ViewBag.Username}\" removed the thread \"{id}\" with its' connected posts");
                 TempData["Message"] = "Successfully removed thread";
             }
             else
             {
-                _logger.LogError($"Saving changes returned <= 0 after user \"{username}\" " +
+                _logger.LogError($"Saving changes returned <= 0 after user \"{ViewBag.Username}\" " +
                     $"removed context thread \"{thread.Id}\" with its' connected posts");
                 TempData["Message"] = "Error: The database did not register your deletion. Try again.";
             }
