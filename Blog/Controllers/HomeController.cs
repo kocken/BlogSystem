@@ -414,6 +414,61 @@ namespace Blog.Controllers
         }
 
         [HttpGet]
+        public IActionResult EvaluateComment(int id, bool approved)
+        {
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to evaluate comment without being logged in");
+                TempData["Message"] = "You are not ranked high enough to see this page";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 1)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "evaluate comment without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to see this page";
+                return RedirectToAction("Index");
+            }
+            if (ViewBag.User == null)
+            {
+                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to evaluate a comment, " +
+                    "but the account was not found in the database");
+                ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
+                return RedirectToAction("Moderation");
+            }
+            EvaluationValue evaluationValue = _context.EvaluationValues
+                .SingleOrDefault(e => e.Name.Equals(
+                    approved ? EvaluationValues.Approved.ToString() : EvaluationValues.Disapproved.ToString()));
+            if (evaluationValue == null)
+            {
+                _logger.LogError("Evaluation value \"" + 
+                    (approved ? EvaluationValues.Approved.ToString() : EvaluationValues.Disapproved.ToString()) + 
+                    $"\" was failed to get obtained from database context during {ViewBag.Username}'s evaluation");
+                ViewBag.ErrorMessage = "Error: The evaluation value was failed to get obtained. Try again.";
+                return RedirectToAction("Moderation");
+            }
+            Evaluation evaluation = new Evaluation {
+                CommentId = id,
+                EvaluationValue = evaluationValue,
+                EvaluatedBy = ViewBag.User,
+                EvaluationTime = DateTime.Now
+            };
+            _context.Add(evaluation);
+            if (_context.SaveChanges() > 0)
+            {
+                _logger.LogInformation($"Evaluation \"{evaluation.Id}\" was created by \"{ViewBag.Username}\"");
+                TempData["Message"] = "Successfully evaluated comment";
+            }
+            else
+            {
+                _logger.LogError("Saving changes returned <= 0 after adding " +
+                    $"evaluation \"{evaluation.Id}\" made by \"{ViewBag.Username}\" to context");
+                ViewBag.ErrorMessage = "Error: The database didn't register your evaluation. Try again.";
+            }
+            return RedirectToAction("Moderation");
+        }
+
+        [HttpGet]
         public IActionResult About()
         {
             return View();

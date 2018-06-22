@@ -66,7 +66,8 @@ namespace Blog.Controllers
             }
             else
             {
-                _logger.LogInformation($"User failed to login to user \"{user.Username}\"");
+                _logger.LogInformation($"User failed to login to user \"{user.Username}\" " +
+                    "by typing in the wrong password");
                 ModelState.AddModelError("Password", "Invalid account password.");
                 return View(user);
             }

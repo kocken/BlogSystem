@@ -34,8 +34,10 @@
                     }
                     <td><span style="color: forestgreen">@approvedPosts</span> | <span style="color: red">@disapprovedPosts</span></td>
                     <td>
-                        <a asp-action="ModerateComment" asp-route-id="true" class="btn btn-success">Approve</a> 
-                        <a asp-action="ModerateComment" asp-route-id="false" class="btn btn-danger">Disapprove</a>
+                        @Html.ActionLink("Approve", "EvaluateComment", 
+                            new { id = item.Id, approved = true }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Disapprove", "EvaluateComment", 
+                            new { id = item.Id, approved = false }, new { @class = "btn btn-danger" })
                     </td>
                 </tr>
             }
