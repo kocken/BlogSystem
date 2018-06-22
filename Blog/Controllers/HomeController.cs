@@ -43,14 +43,14 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to create thread without being logged in");
-                TempData["Message"] = "You need to login to create a thread";
+                TempData["Message"] = "You need to login to create threads";
                 return RedirectToAction("Login", "Account");
             }
             if (ViewBag.RankLevel < 1)
             {
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
                     "create thread without being high enough rank");
-                TempData["Message"] = "You are not ranked high enough to create a thread";
+                TempData["Message"] = "You are not ranked high enough to create threads";
                 return RedirectToAction("Index");
             }
             return View("Create-Thread", new ThreadModel { Tags = _context.Tags.ToList() });
@@ -63,7 +63,7 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to create thread without being logged in");
-                TempData["Message"] = "You need to login to create a thread";
+                TempData["Message"] = "You need to login to create threads";
                 return RedirectToAction("Login", "Account");
             }
             if (ViewBag.RankLevel < 1 && 
@@ -73,14 +73,14 @@ namespace Blog.Controllers
                 {
                     _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
                         "create thread without being high enough rank");
+                    TempData["Message"] = "You are not ranked high enough to create threads";
                 }
                 else
                 {
                     _logger.LogInformation($"User \"{ViewBag.Username}\" tried to edit the thread \"{model.Id}\" " +
                         "without being the author nor having high enough rank");
+                    TempData["Message"] = "You are not the author of the thread, nor ranked high enough to edit the thread";
                 }
-                TempData["Message"] = "You are not ranked high enough " + (model.Id == -1 ? 
-                    "to create a" : "nor the author of the thread, you are not able to edit the") + " thread";
                 return RedirectToAction("Index");
             }
             if (ModelState.GetFieldValidationState("Title") != ModelValidationState.Valid ||
@@ -185,7 +185,7 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to edit a thread without being logged in");
-                TempData["Message"] = "You need to login to be able to edit threads";
+                TempData["Message"] = "You need to login to edit threads";
                 return RedirectToAction("Login", "Account");
             }
             Thread thread = _context.Threads
@@ -240,14 +240,14 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to post a comment without being logged in");
-                TempData["Message"] = "You need to login to post a comment";
+                TempData["Message"] = "You need to login to post comments";
                 return RedirectToAction("Login", "Account");
             }
             if (ViewBag.RankLevel < 0)
             {
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
                     "post a comment without being high enough rank");
-                TempData["Message"] = "You are not ranked high enough to post a comment";
+                TempData["Message"] = "You are not ranked high enough to post comments";
                 return RedirectToAction("Index");
             }
             return View("Post-Comment", new Comment { ThreadId = id });
@@ -260,14 +260,14 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to post a comment without being logged in");
-                TempData["Message"] = "You need to login to post a comment";
+                TempData["Message"] = "You need to login to post comments";
                 return RedirectToAction("Login", "Account");
             }
             if (ViewBag.RankLevel < 0)
             {
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
                     "post a comment without being high enough rank");
-                TempData["Message"] = "You are not ranked high enough to post a comment";
+                TempData["Message"] = "You are not ranked high enough to post comments";
                 return RedirectToAction("Index");
             }
             if (ModelState.GetFieldValidationState("Message") != ModelValidationState.Valid)
@@ -321,7 +321,7 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to remove a thread without being logged in");
-                TempData["Message"] = "You need to login to remove a thread";
+                TempData["Message"] = "You need to login to remove threads";
                 return RedirectToAction("Login", "Account");
             }
             Thread thread = _context.Threads.SingleOrDefault(t => t.Id == id);
@@ -336,8 +336,7 @@ namespace Blog.Controllers
             {
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to remove the thread \"{id}\" " +
                     "without being the author nor having high enough rank");
-                TempData["Message"] = "You are not ranked high enough nor " +
-                    "the author of the thread, you are not able to remove the thread";
+                TempData["Message"] = "You are not the author, nor ranked high enough to remove the thread";
                 return RedirectToAction("Index");
             }
             _context.RemoveRange(_context.ThreadTags.Where(tt => tt.ThreadId == id));

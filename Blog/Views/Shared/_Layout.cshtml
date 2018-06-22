@@ -100,6 +100,20 @@
     </environment>
     <script src="~/js/fontawesome-all.min.js"></script>
 
+    @if (TempData["Message"] != null)
+    {
+        <script src="~/js/vex.combined.min.js"></script>
+        <script>vex.defaultOptions.className = 'vex-theme-os'</script>
+        <link href="~/css/vex.css" rel="stylesheet" />
+        <link href="~/css/vex-theme-default.css" rel="stylesheet" />
+        <script>
+        vex.dialog.alert({
+            message: '@TempData["Message"]',
+            className: 'vex-theme-default'
+        })
+        </script>
+    }
+
     @RenderSection("Scripts", required: false)
 
     <div class="container body-content">
