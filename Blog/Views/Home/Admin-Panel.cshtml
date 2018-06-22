@@ -1,34 +1,6 @@
-﻿@model IEnumerable<Domain.Thread>
-
-@{
+﻿@{
     ViewData["Title"] = "Admin panel";
 }
 <h1>@ViewData["Title"]</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.User.Username)</th>
-            <th>@Html.DisplayNameFor(model => model.Title)</th>
-            <th>@Html.DisplayNameFor(model => model.Message)</th>
-            <th>@Html.DisplayNameFor(model => model.Comments)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.User.Username)</td>
-                <td>@Html.DisplayFor(modelItem => item.Title)</td>
-                <td>@Html.DisplayFor(modelItem => item.Message)</td>
-                <td>@Html.DisplayFor(modelItem => item.Comments.Count)</td>
-                <td>
-                    <a asp-action="View" asp-route-id="@item.Id">View</a> |
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<p>Potential future admin functions will be located here</p>

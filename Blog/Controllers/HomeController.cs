@@ -364,14 +364,40 @@ namespace Blog.Controllers
 
         [HttpGet]
         [Route("Admin-Panel")]
-        public async Task<IActionResult> AdminPanel()
+        public IActionResult AdminPanel()
         {
-            return View("Admin-Panel", await _context.Threads.Include(_ => _.User).ToListAsync());
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to visit the admin-panel without being logged in");
+                TempData["Message"] = "You need to login to see this page";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 2)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "visit the admin-panel without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to see this page";
+                return RedirectToAction("Index");
+            }
+            return View("Admin-Panel");
         }
 
         [HttpGet]
         public async Task<IActionResult> Moderation()
         {
+            if (ViewBag.Username == null)
+            {
+                _logger.LogInformation("User tried to visit the moderation page without being logged in");
+                TempData["Message"] = "You need to login to see this page";
+                return RedirectToAction("Login", "Account");
+            }
+            if (ViewBag.RankLevel < 1)
+            {
+                _logger.LogInformation($"User \"{ViewBag.Username}\" tried to " +
+                    "visit the moderation page without being high enough rank");
+                TempData["Message"] = "You are not ranked high enough to see this page";
+                return RedirectToAction("Index");
+            }
             return View(await _context.Threads.Include(_ => _.User).ToListAsync());
         }
 
