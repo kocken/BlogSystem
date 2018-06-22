@@ -32,7 +32,7 @@
                             disapprovedPosts += c.Evaluations.Where(e => e.EvaluationValue.Name.Equals("Disapproved")).Count();
                         }
                     }
-                    <td>@approvedPosts | @disapprovedPosts</td>
+                    <td><span style="color: forestgreen">@approvedPosts</span> | <span style="color: red">@disapprovedPosts</span></td>
                     <td>
                         <a asp-action="ModerateComment" asp-route-id="true" class="btn btn-success">Approve</a> 
                         <a asp-action="ModerateComment" asp-route-id="false" class="btn btn-danger">Disapprove</a>

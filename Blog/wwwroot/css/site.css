@@ -80,3 +80,11 @@ input[type]:focus, textarea:focus {
     .thread .comment {
         padding-left: 20px;
     }
+
+table {
+    table-layout: fixed;
+}
+
+td {
+    word-wrap: break-word
+}
