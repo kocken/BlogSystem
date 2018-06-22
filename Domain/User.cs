@@ -1,11 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain
 {
     public class User
     {
+        public User()
+        {
+            Comments = new List<Comment>();
+        }
+
         [Key, Required]
         public int Id { get; set; }
 
@@ -25,5 +31,7 @@ namespace Domain
 
         [Required]
         public DateTime JoinTime { get; set; }
+
+        public List<Comment> Comments { get; set; }
     }
 }

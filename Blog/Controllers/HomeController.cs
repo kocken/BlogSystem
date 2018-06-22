@@ -27,6 +27,8 @@ namespace Blog.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            // Async used for faster load times, a future scalability feauture useful under heavy load.
+            // Used instead of threading for faster perfomance.
             return View(await _context.Threads
                 .Include(thread => thread.User)
                 .Include(thread => thread.ThreadTags)
@@ -398,7 +400,17 @@ namespace Blog.Controllers
                 TempData["Message"] = "You are not ranked high enough to see this page";
                 return RedirectToAction("Index");
             }
-            return View(await _context.Threads.Include(_ => _.User).ToListAsync());
+            return View(await _context.Comments
+                .IgnoreQueryFilters()
+                .Include(c => c.User)
+                .Include(c => c.Thread)
+                .Include(c => c.Evaluations)
+                    .ThenInclude(e => e.EvaluationValue)
+                .Include(c => c.User)
+                    .ThenInclude(u => u.Comments)
+                        .ThenInclude(c => c.Evaluations)
+                            .ThenInclude(e => e.EvaluationValue)
+                .ToListAsync());
         }
 
         [HttpGet]
