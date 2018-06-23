@@ -41,7 +41,14 @@
                     @if (ViewBag.RankLevel >= 1)
                     {
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Moderation">Moderation</a>
+                            @if (ViewBag.AvailableEvaluations)
+                            {
+                                <a class="nav-link" asp-controller="Home" asp-action="Moderation" style="color: tomato">Moderation</a>
+                            }
+                            else
+                            {
+                                <a class="nav-link" asp-controller="Home" asp-action="Moderation">Moderation</a>
+                            }
                         </li>
                     }
                     <li class="nav-item">

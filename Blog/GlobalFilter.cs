@@ -39,6 +39,12 @@ namespace Blog
             GetAccountInfo(context, controller, username, out User user, out int rankLevel);
             controller.ViewBag.User = user;
             controller.ViewBag.RankLevel = rankLevel;
+            if (rankLevel >= 1)
+            {
+                controller.ViewBag.AvailableEvaluations = _context.Comments
+                    .IgnoreQueryFilters()
+                    .Any(c => c.Evaluations.Count == 0);
+            }
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
