@@ -127,7 +127,12 @@
         @RenderBody()
         <hr />
         <footer>
-            <center><p>&copy; @DateTime.Now.Year Mikael Karlgren</p></center>
+            @{
+                int creationYear = 2018, currentYear = DateTime.Now.Year;
+            }
+            <center><p>Copyright &copy; 
+                @(creationYear < currentYear ? creationYear + "-" : "")@currentYear 
+                Mikael Karlgren. All right reserved.</p></center>
         </footer>
     </div>
 </body>
