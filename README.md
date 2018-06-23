@@ -1,6 +1,7 @@
-# EF_Mikael_Karlgren_Blog
-## About
+# BlogSystem
 A web blog system written with ASP.NET Core (Entity Framework Core and MVC Core). Microsoft SQL Server Express LocalDB is used for database storage, whereas the connection details are found at "Blog/appsettings.json". This project was made as a final assignment in the course "Dataåtkomster i NET" (".NET data access") winter 2018 at [Teknikhögskolan Gothenburg](http://teknikhogskolan.se/utbildningar/fullstack-developer-net).
+
+![Alt text]BlogSystem.gif?raw=true "Preview")
 
 ## Features
 The system contains moderation functionality, which restricts users to access certain functions. For example, only users having the mod/admin rank are able to create threads, but the threads can be commented by anyone logged in. When a comment is made, it requires approval from staff. This is done through the "Moderation" navigation bar link, which is seen and can be accessed from moderators and administators. The "Moderation" navbar title color will be red when there are available comments that requires evaluating. There are some other restrictions in place too, to avoid actions that the user might of not have wanted to intend, such as registering/logging in when already logged in. All these acitons, whatever successful or not, are neatly tied up together with log messages to have the ability to spot errors and whatnot. The user also gets informerical client-messages when executing actions.
