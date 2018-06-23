@@ -15,7 +15,7 @@
 {
     var item = Model.ToList()[i];
     <div class="thread">
-        <h2>@item.Title</h2>
+        <h2 class="wrap">@item.Title</h2>
         <p class="creation">
             Posted by @item.User.Username at @item.CreationTime
             <br>
@@ -34,7 +34,7 @@
                 @:None
             }
         </p>
-        <p class="message">@item.Message</p>
+        <p class="message wrap">@item.Message</p>
         <h3>Comments</h3>
         @if (item.Comments.Count > 0)
         {
@@ -46,7 +46,7 @@
                     <p class="creation">
                         Posted by @comment.User.Username at @comment.CreationTime
                     </p>
-                    <p class="message">@comment.Message</p>
+                    <p class="message wrap">@comment.Message</p>
                 </div>
                 <hr align="left" width="40%">
             }
