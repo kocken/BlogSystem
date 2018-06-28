@@ -91,13 +91,6 @@ namespace Blog.Controllers
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to create thread with invalid model values");
                 return View("Create-Thread", model);
             }
-            if (ViewBag.User == null)
-            {
-                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to make a thread, " +
-                    "but the account was not found in the database");
-                ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
-                return View("Create-Thread", model);
-            }
             Thread thread = new Thread {
                 Title = model.Title,
                 Message = model.Message
@@ -277,13 +270,6 @@ namespace Blog.Controllers
                 _logger.LogInformation($"User \"{ViewBag.Username}\" tried to post comment with invalid model value");
                 return View("Post-Comment", comment);
             }
-            if (ViewBag.User == null)
-            {
-                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to make a thread, " +
-                    "but the account was not found in the database");
-                ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
-                return View("Post-Comment", comment);
-            }
             if (!_context.Threads.Any(t => t.Id == comment.ThreadId))
             {
                 _logger.LogError($"User \"{ViewBag.Username}\" tried to make a comment, " +
@@ -419,7 +405,7 @@ namespace Blog.Controllers
             if (ViewBag.Username == null)
             {
                 _logger.LogInformation("User tried to evaluate comment without being logged in");
-                TempData["Message"] = "You are not ranked high enough to see this page";
+                TempData["Message"] = "You need to login to see this page";
                 return RedirectToAction("Login", "Account");
             }
             if (ViewBag.RankLevel < 1)
@@ -428,13 +414,6 @@ namespace Blog.Controllers
                     "evaluate comment without being high enough rank");
                 TempData["Message"] = "You are not ranked high enough to see this page";
                 return RedirectToAction("Index");
-            }
-            if (ViewBag.User == null)
-            {
-                _logger.LogError($"Logged in user \"{ViewBag.Username}\" tried to evaluate a comment, " +
-                    "but the account was not found in the database");
-                ViewBag.ErrorMessage = "Error: Your account was not found in the database. Try again.";
-                return RedirectToAction("Moderation");
             }
             EvaluationValue evaluationValue = _context.EvaluationValues
                 .SingleOrDefault(e => e.Name.Equals(
