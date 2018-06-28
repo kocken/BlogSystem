@@ -53,6 +53,7 @@ namespace Blog.Controllers
                 ModelState.AddModelError("Username", $"The account \"{user.Username}\" doesn't exist.");
                 return View(user);
             }
+            user.Password = Security.ROT13EncryptMessage(user.Password);
             User dbUser = _context.Users.SingleOrDefault(u =>
                 u.Username.ToLower().Equals(user.Username.ToLower()) &&
                 u.Password.ToLower().Equals(user.Password.ToLower()));
@@ -109,6 +110,7 @@ namespace Blog.Controllers
                 ModelState.AddModelError("Username", $"The username \"{user.Username}\" is already in use.");
                 return View(user);
             }
+            user.Password = Security.ROT13EncryptMessage(user.Password);
             Rank defaultRank = _context.Ranks.SingleOrDefault(r => r.Name.Equals(Ranks.Member.ToString()));
             if (defaultRank == null)
             {

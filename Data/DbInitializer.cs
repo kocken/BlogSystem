@@ -7,7 +7,7 @@ namespace Data
 {
     public static class DbInitializer
     {
-        private static bool ReInitialize = false; // NOTE: when true the DB will be reset with the entries below
+        private static readonly bool ReInitialize = false; // NOTE: when true the DB will be reset with the entries below
 
         public static void Initialize(BlogContext context)
         {
@@ -50,19 +50,19 @@ namespace Data
             {
                 new User{
                     Username = "Admin",
-                    Password = "pass123",
+                    Password = Security.ROT13EncryptMessage("pass123"),
                     Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Administrator.ToString())),
                     JoinTime = DateTime.Now
                 },
                 new User{
                     Username = "Mikael",
-                    Password = "pass123",
+                    Password = Security.ROT13EncryptMessage("pass123"),
                     Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Moderator.ToString())),
                     JoinTime = DateTime.Now + TimeSpan.FromSeconds(5)
                 },
                 new User{
                     Username = "Billy",
-                    Password = "qwerty",
+                    Password = Security.ROT13EncryptMessage("qwerty"),
                     Rank = Array.Find(ranks, r => r.Name.Equals(Ranks.Member.ToString())),
                     JoinTime = DateTime.Now + TimeSpan.FromSeconds(10)
                 }

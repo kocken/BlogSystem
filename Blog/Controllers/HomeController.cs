@@ -27,8 +27,10 @@ namespace Blog.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Async used for faster load times, a future scalability feauture useful under heavy load.
-            // Used instead of threading for faster perfomance.
+            // Async used for faster load times under heavy load, 
+            // to make sure that the application threads aren't occupied & stalling, for the sake of future scalability.
+            // Used instead of threading for faster perfomance, 
+            // as async threads are obtained directly from a thread pool created on launch.
             return View(await _context.Threads
                 .Include(thread => thread.User)
                 .Include(thread => thread.ThreadTags)
